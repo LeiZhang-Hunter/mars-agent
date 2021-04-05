@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/ugc_node_agent.dir/main.cpp.o CMakeFiles/ugc_node_agent.dir/src/app/NodeAgent.cc.o  -o ugc_node_agent 
+/usr/bin/c++   -pthread -event -g  -static-libgcc -static-libstdc++ CMakeFiles/ugc_node_agent.dir/main.cpp.o CMakeFiles/ugc_node_agent.dir/src/app/NodeAgent.cc.o  -o ugc_node_agent 

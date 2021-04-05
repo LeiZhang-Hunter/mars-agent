@@ -1,4 +1,5 @@
 #include <iostream>
+#include <jemalloc/jemalloc.h>
 #include <memory>
 
 #include "NodeAgent.h"

@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/zhanglei/ourc/mars-agent/cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/zhanglei/soft/CLion-2020.1/clion-2020.1/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/home/zhanglei/soft/CLion-2020.1/clion-2020.1/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ugc_node_agent
+# Target rules for targets named mars
 
 # Build rule for target.
-ugc_node_agent: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ugc_node_agent
-.PHONY : ugc_node_agent
+mars: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mars
+.PHONY : mars
 
 # fast build rule for target.
-ugc_node_agent/fast:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/build
-.PHONY : ugc_node_agent/fast
+mars/fast:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/build
+.PHONY : mars/fast
 
 main.o: main.cpp.o
 
@@ -129,7 +129,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -138,7 +138,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -147,7 +147,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 src/app/NodeAgent.o: src/app/NodeAgent.cc.o
@@ -156,7 +156,7 @@ src/app/NodeAgent.o: src/app/NodeAgent.cc.o
 
 # target to build an object file
 src/app/NodeAgent.cc.o:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/src/app/NodeAgent.cc.o
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/NodeAgent.cc.o
 .PHONY : src/app/NodeAgent.cc.o
 
 src/app/NodeAgent.i: src/app/NodeAgent.cc.i
@@ -165,7 +165,7 @@ src/app/NodeAgent.i: src/app/NodeAgent.cc.i
 
 # target to preprocess a source file
 src/app/NodeAgent.cc.i:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/src/app/NodeAgent.cc.i
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/NodeAgent.cc.i
 .PHONY : src/app/NodeAgent.cc.i
 
 src/app/NodeAgent.s: src/app/NodeAgent.cc.s
@@ -174,8 +174,62 @@ src/app/NodeAgent.s: src/app/NodeAgent.cc.s
 
 # target to generate assembly for a file
 src/app/NodeAgent.cc.s:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/src/app/NodeAgent.cc.s
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/NodeAgent.cc.s
 .PHONY : src/app/NodeAgent.cc.s
+
+src/app/event/EventLoop.o: src/app/event/EventLoop.cc.o
+
+.PHONY : src/app/event/EventLoop.o
+
+# target to build an object file
+src/app/event/EventLoop.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventLoop.cc.o
+.PHONY : src/app/event/EventLoop.cc.o
+
+src/app/event/EventLoop.i: src/app/event/EventLoop.cc.i
+
+.PHONY : src/app/event/EventLoop.i
+
+# target to preprocess a source file
+src/app/event/EventLoop.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventLoop.cc.i
+.PHONY : src/app/event/EventLoop.cc.i
+
+src/app/event/EventLoop.s: src/app/event/EventLoop.cc.s
+
+.PHONY : src/app/event/EventLoop.s
+
+# target to generate assembly for a file
+src/app/event/EventLoop.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventLoop.cc.s
+.PHONY : src/app/event/EventLoop.cc.s
+
+src/app/event/EventSignal.o: src/app/event/EventSignal.cc.o
+
+.PHONY : src/app/event/EventSignal.o
+
+# target to build an object file
+src/app/event/EventSignal.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventSignal.cc.o
+.PHONY : src/app/event/EventSignal.cc.o
+
+src/app/event/EventSignal.i: src/app/event/EventSignal.cc.i
+
+.PHONY : src/app/event/EventSignal.i
+
+# target to preprocess a source file
+src/app/event/EventSignal.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventSignal.cc.i
+.PHONY : src/app/event/EventSignal.cc.i
+
+src/app/event/EventSignal.s: src/app/event/EventSignal.cc.s
+
+.PHONY : src/app/event/EventSignal.s
+
+# target to generate assembly for a file
+src/app/event/EventSignal.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventSignal.cc.s
+.PHONY : src/app/event/EventSignal.cc.s
 
 # Help Target
 help:
@@ -183,15 +237,21 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... ugc_node_agent"
+	@echo "... rebuild_cache"
+	@echo "... mars"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
 	@echo "... src/app/NodeAgent.o"
 	@echo "... src/app/NodeAgent.i"
 	@echo "... src/app/NodeAgent.s"
+	@echo "... src/app/event/EventLoop.o"
+	@echo "... src/app/event/EventLoop.i"
+	@echo "... src/app/event/EventLoop.s"
+	@echo "... src/app/event/EventSignal.o"
+	@echo "... src/app/event/EventSignal.i"
+	@echo "... src/app/event/EventSignal.s"
 .PHONY : help
 
 

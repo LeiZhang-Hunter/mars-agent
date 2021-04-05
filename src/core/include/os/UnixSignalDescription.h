@@ -4,7 +4,7 @@
 
 #ifndef PHPLOGGUARD_UNIXSIGNALDESCRIPTION_H
 #define PHPLOGGUARD_UNIXSIGNALDESCRIPTION_H
-
+#include <unistd.h>
 #include <csignal>
 #include <cerrno>
 #include <string>

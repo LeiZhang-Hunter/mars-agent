@@ -53,7 +53,7 @@ CMAKE_BINARY_DIR = /home/zhanglei/ourc/mars-agent/cmake-build-debug
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/ugc_node_agent.dir/all
+all: CMakeFiles/mars.dir/all
 
 .PHONY : all
 
@@ -63,36 +63,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/ugc_node_agent.dir/clean
+clean: CMakeFiles/mars.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/ugc_node_agent.dir
+# Target rules for target CMakeFiles/mars.dir
 
 # All Build rule for target.
-CMakeFiles/ugc_node_agent.dir/all:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/depend
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target ugc_node_agent"
-.PHONY : CMakeFiles/ugc_node_agent.dir/all
+CMakeFiles/mars.dir/all:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/depend
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5 "Built target mars"
+.PHONY : CMakeFiles/mars.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/ugc_node_agent.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ugc_node_agent.dir/all
+CMakeFiles/mars.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/mars.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/ugc_node_agent.dir/rule
+.PHONY : CMakeFiles/mars.dir/rule
 
 # Convenience name for target.
-ugc_node_agent: CMakeFiles/ugc_node_agent.dir/rule
+mars: CMakeFiles/mars.dir/rule
 
-.PHONY : ugc_node_agent
+.PHONY : mars
 
 # clean rule for target.
-CMakeFiles/ugc_node_agent.dir/clean:
-	$(MAKE) -f CMakeFiles/ugc_node_agent.dir/build.make CMakeFiles/ugc_node_agent.dir/clean
-.PHONY : CMakeFiles/ugc_node_agent.dir/clean
+CMakeFiles/mars.dir/clean:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/clean
+.PHONY : CMakeFiles/mars.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
