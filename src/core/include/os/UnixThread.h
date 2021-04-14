@@ -15,24 +15,17 @@
 #include <iostream>
 
 #include "UnixMutex.h"
-#include "event/EventLoop.h"
 #include "os/UnixThreadProc.h"
 #include "os/UnixCountDownLatch.h"
-#include "event/Channel.h"
+#include "Callable.h"
 
 namespace OS {
+
+
     class UnixThread {
     public:
         //构造函数
-        UnixThread() {
-            //初始化互斥锁
-            mTerminated = false;
-            daemonize = false;
-            isSuspend = false;
-            mRunStatus = false;
-            loop = new Event::EventLoop();
-            latch = std::make_shared<UnixCountDownLatch>(1);
-        }
+        UnixThread();
 
         //析构函数
         ~UnixThread();
@@ -43,7 +36,7 @@ namespace OS {
         //停止线程
         void Stop() {
             mMutex.lock();
-            loop->stop();
+            loop->quit();
             mTerminated = true;
             mMutex.unlock();
         }
@@ -66,13 +59,19 @@ namespace OS {
             return true;
         }
 
+        //设置初始化函数
+        void setInitCallable(const Callable::initCallable& callable)
+        {
+            proc->setInitCallable(callable);
+        }
+
         //获取线程的tid
         size_t  getPid() {
             return mThreadID;
         }
 
         //获取线程内部的事件循环
-        Event::EventLoop* getEventLoop() {
+        std::shared_ptr<Event::EventLoop> getEventLoop() {
             return loop;
         }
 
@@ -118,14 +117,18 @@ namespace OS {
         //线程运行状态
         bool mRunStatus;
 
+
         //线程属性
         pthread_attr_t attr;
 
         //事件循环
-        Event::EventLoop* loop;
+        std::shared_ptr<Event::EventLoop> loop;
 
         //互斥原语
         std::shared_ptr<UnixCountDownLatch> latch;
+
+        //线程的处理程序
+        UnixThreadProc *proc;
 
         //线程id
         pid_t tid;

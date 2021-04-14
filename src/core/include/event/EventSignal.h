@@ -14,7 +14,7 @@ extern "C" {
 #include <csignal>
 #include "Noncopyable.h"
 
-namespace appEvent {
+namespace Event {
     //事件循环的前置声明
     class EventLoop;
 

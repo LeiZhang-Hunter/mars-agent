@@ -11,7 +11,7 @@ extern "C" {
 #include "EventSignal.h"
 #include "Noncopyable.h"
 
-namespace appEvent {
+namespace Event {
 
     typedef void(*dispatcherSignal)(evutil_socket_t sig, short events, void *param);
 

@@ -150,6 +150,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/app/AgentWorker.o: src/app/AgentWorker.cc.o
+
+.PHONY : src/app/AgentWorker.o
+
+# target to build an object file
+src/app/AgentWorker.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/AgentWorker.cc.o
+.PHONY : src/app/AgentWorker.cc.o
+
+src/app/AgentWorker.i: src/app/AgentWorker.cc.i
+
+.PHONY : src/app/AgentWorker.i
+
+# target to preprocess a source file
+src/app/AgentWorker.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/AgentWorker.cc.i
+.PHONY : src/app/AgentWorker.cc.i
+
+src/app/AgentWorker.s: src/app/AgentWorker.cc.s
+
+.PHONY : src/app/AgentWorker.s
+
+# target to generate assembly for a file
+src/app/AgentWorker.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/AgentWorker.cc.s
+.PHONY : src/app/AgentWorker.cc.s
+
 src/app/NodeAgent.o: src/app/NodeAgent.cc.o
 
 .PHONY : src/app/NodeAgent.o
@@ -177,59 +204,275 @@ src/app/NodeAgent.cc.s:
 	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/NodeAgent.cc.s
 .PHONY : src/app/NodeAgent.cc.s
 
-src/app/event/EventLoop.o: src/app/event/EventLoop.cc.o
+src/core/event/Channel.o: src/core/event/Channel.cc.o
 
-.PHONY : src/app/event/EventLoop.o
-
-# target to build an object file
-src/app/event/EventLoop.cc.o:
-	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventLoop.cc.o
-.PHONY : src/app/event/EventLoop.cc.o
-
-src/app/event/EventLoop.i: src/app/event/EventLoop.cc.i
-
-.PHONY : src/app/event/EventLoop.i
-
-# target to preprocess a source file
-src/app/event/EventLoop.cc.i:
-	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventLoop.cc.i
-.PHONY : src/app/event/EventLoop.cc.i
-
-src/app/event/EventLoop.s: src/app/event/EventLoop.cc.s
-
-.PHONY : src/app/event/EventLoop.s
-
-# target to generate assembly for a file
-src/app/event/EventLoop.cc.s:
-	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventLoop.cc.s
-.PHONY : src/app/event/EventLoop.cc.s
-
-src/app/event/EventSignal.o: src/app/event/EventSignal.cc.o
-
-.PHONY : src/app/event/EventSignal.o
+.PHONY : src/core/event/Channel.o
 
 # target to build an object file
-src/app/event/EventSignal.cc.o:
-	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventSignal.cc.o
-.PHONY : src/app/event/EventSignal.cc.o
+src/core/event/Channel.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/Channel.cc.o
+.PHONY : src/core/event/Channel.cc.o
 
-src/app/event/EventSignal.i: src/app/event/EventSignal.cc.i
+src/core/event/Channel.i: src/core/event/Channel.cc.i
 
-.PHONY : src/app/event/EventSignal.i
+.PHONY : src/core/event/Channel.i
 
 # target to preprocess a source file
-src/app/event/EventSignal.cc.i:
-	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventSignal.cc.i
-.PHONY : src/app/event/EventSignal.cc.i
+src/core/event/Channel.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/Channel.cc.i
+.PHONY : src/core/event/Channel.cc.i
 
-src/app/event/EventSignal.s: src/app/event/EventSignal.cc.s
+src/core/event/Channel.s: src/core/event/Channel.cc.s
 
-.PHONY : src/app/event/EventSignal.s
+.PHONY : src/core/event/Channel.s
 
 # target to generate assembly for a file
-src/app/event/EventSignal.cc.s:
-	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/app/event/EventSignal.cc.s
-.PHONY : src/app/event/EventSignal.cc.s
+src/core/event/Channel.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/Channel.cc.s
+.PHONY : src/core/event/Channel.cc.s
+
+src/core/event/EventLoop.o: src/core/event/EventLoop.cc.o
+
+.PHONY : src/core/event/EventLoop.o
+
+# target to build an object file
+src/core/event/EventLoop.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/EventLoop.cc.o
+.PHONY : src/core/event/EventLoop.cc.o
+
+src/core/event/EventLoop.i: src/core/event/EventLoop.cc.i
+
+.PHONY : src/core/event/EventLoop.i
+
+# target to preprocess a source file
+src/core/event/EventLoop.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/EventLoop.cc.i
+.PHONY : src/core/event/EventLoop.cc.i
+
+src/core/event/EventLoop.s: src/core/event/EventLoop.cc.s
+
+.PHONY : src/core/event/EventLoop.s
+
+# target to generate assembly for a file
+src/core/event/EventLoop.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/EventLoop.cc.s
+.PHONY : src/core/event/EventLoop.cc.s
+
+src/core/event/EventSignal.o: src/core/event/EventSignal.cc.o
+
+.PHONY : src/core/event/EventSignal.o
+
+# target to build an object file
+src/core/event/EventSignal.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/EventSignal.cc.o
+.PHONY : src/core/event/EventSignal.cc.o
+
+src/core/event/EventSignal.i: src/core/event/EventSignal.cc.i
+
+.PHONY : src/core/event/EventSignal.i
+
+# target to preprocess a source file
+src/core/event/EventSignal.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/EventSignal.cc.i
+.PHONY : src/core/event/EventSignal.cc.i
+
+src/core/event/EventSignal.s: src/core/event/EventSignal.cc.s
+
+.PHONY : src/core/event/EventSignal.s
+
+# target to generate assembly for a file
+src/core/event/EventSignal.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/event/EventSignal.cc.s
+.PHONY : src/core/event/EventSignal.cc.s
+
+src/core/os/UnixCommand.o: src/core/os/UnixCommand.cc.o
+
+.PHONY : src/core/os/UnixCommand.o
+
+# target to build an object file
+src/core/os/UnixCommand.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixCommand.cc.o
+.PHONY : src/core/os/UnixCommand.cc.o
+
+src/core/os/UnixCommand.i: src/core/os/UnixCommand.cc.i
+
+.PHONY : src/core/os/UnixCommand.i
+
+# target to preprocess a source file
+src/core/os/UnixCommand.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixCommand.cc.i
+.PHONY : src/core/os/UnixCommand.cc.i
+
+src/core/os/UnixCommand.s: src/core/os/UnixCommand.cc.s
+
+.PHONY : src/core/os/UnixCommand.s
+
+# target to generate assembly for a file
+src/core/os/UnixCommand.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixCommand.cc.s
+.PHONY : src/core/os/UnixCommand.cc.s
+
+src/core/os/UnixCountDownLatch.o: src/core/os/UnixCountDownLatch.cc.o
+
+.PHONY : src/core/os/UnixCountDownLatch.o
+
+# target to build an object file
+src/core/os/UnixCountDownLatch.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixCountDownLatch.cc.o
+.PHONY : src/core/os/UnixCountDownLatch.cc.o
+
+src/core/os/UnixCountDownLatch.i: src/core/os/UnixCountDownLatch.cc.i
+
+.PHONY : src/core/os/UnixCountDownLatch.i
+
+# target to preprocess a source file
+src/core/os/UnixCountDownLatch.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixCountDownLatch.cc.i
+.PHONY : src/core/os/UnixCountDownLatch.cc.i
+
+src/core/os/UnixCountDownLatch.s: src/core/os/UnixCountDownLatch.cc.s
+
+.PHONY : src/core/os/UnixCountDownLatch.s
+
+# target to generate assembly for a file
+src/core/os/UnixCountDownLatch.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixCountDownLatch.cc.s
+.PHONY : src/core/os/UnixCountDownLatch.cc.s
+
+src/core/os/UnixInodeWatcher.o: src/core/os/UnixInodeWatcher.cc.o
+
+.PHONY : src/core/os/UnixInodeWatcher.o
+
+# target to build an object file
+src/core/os/UnixInodeWatcher.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixInodeWatcher.cc.o
+.PHONY : src/core/os/UnixInodeWatcher.cc.o
+
+src/core/os/UnixInodeWatcher.i: src/core/os/UnixInodeWatcher.cc.i
+
+.PHONY : src/core/os/UnixInodeWatcher.i
+
+# target to preprocess a source file
+src/core/os/UnixInodeWatcher.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixInodeWatcher.cc.i
+.PHONY : src/core/os/UnixInodeWatcher.cc.i
+
+src/core/os/UnixInodeWatcher.s: src/core/os/UnixInodeWatcher.cc.s
+
+.PHONY : src/core/os/UnixInodeWatcher.s
+
+# target to generate assembly for a file
+src/core/os/UnixInodeWatcher.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixInodeWatcher.cc.s
+.PHONY : src/core/os/UnixInodeWatcher.cc.s
+
+src/core/os/UnixThread.o: src/core/os/UnixThread.cc.o
+
+.PHONY : src/core/os/UnixThread.o
+
+# target to build an object file
+src/core/os/UnixThread.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixThread.cc.o
+.PHONY : src/core/os/UnixThread.cc.o
+
+src/core/os/UnixThread.i: src/core/os/UnixThread.cc.i
+
+.PHONY : src/core/os/UnixThread.i
+
+# target to preprocess a source file
+src/core/os/UnixThread.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixThread.cc.i
+.PHONY : src/core/os/UnixThread.cc.i
+
+src/core/os/UnixThread.s: src/core/os/UnixThread.cc.s
+
+.PHONY : src/core/os/UnixThread.s
+
+# target to generate assembly for a file
+src/core/os/UnixThread.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixThread.cc.s
+.PHONY : src/core/os/UnixThread.cc.s
+
+src/core/os/UnixThreadProc.o: src/core/os/UnixThreadProc.cc.o
+
+.PHONY : src/core/os/UnixThreadProc.o
+
+# target to build an object file
+src/core/os/UnixThreadProc.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixThreadProc.cc.o
+.PHONY : src/core/os/UnixThreadProc.cc.o
+
+src/core/os/UnixThreadProc.i: src/core/os/UnixThreadProc.cc.i
+
+.PHONY : src/core/os/UnixThreadProc.i
+
+# target to preprocess a source file
+src/core/os/UnixThreadProc.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixThreadProc.cc.i
+.PHONY : src/core/os/UnixThreadProc.cc.i
+
+src/core/os/UnixThreadProc.s: src/core/os/UnixThreadProc.cc.s
+
+.PHONY : src/core/os/UnixThreadProc.s
+
+# target to generate assembly for a file
+src/core/os/UnixThreadProc.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixThreadProc.cc.s
+.PHONY : src/core/os/UnixThreadProc.cc.s
+
+src/core/os/UnixTimer.o: src/core/os/UnixTimer.cc.o
+
+.PHONY : src/core/os/UnixTimer.o
+
+# target to build an object file
+src/core/os/UnixTimer.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixTimer.cc.o
+.PHONY : src/core/os/UnixTimer.cc.o
+
+src/core/os/UnixTimer.i: src/core/os/UnixTimer.cc.i
+
+.PHONY : src/core/os/UnixTimer.i
+
+# target to preprocess a source file
+src/core/os/UnixTimer.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixTimer.cc.i
+.PHONY : src/core/os/UnixTimer.cc.i
+
+src/core/os/UnixTimer.s: src/core/os/UnixTimer.cc.s
+
+.PHONY : src/core/os/UnixTimer.s
+
+# target to generate assembly for a file
+src/core/os/UnixTimer.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixTimer.cc.s
+.PHONY : src/core/os/UnixTimer.cc.s
+
+src/core/os/UnixUtil.o: src/core/os/UnixUtil.cc.o
+
+.PHONY : src/core/os/UnixUtil.o
+
+# target to build an object file
+src/core/os/UnixUtil.cc.o:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixUtil.cc.o
+.PHONY : src/core/os/UnixUtil.cc.o
+
+src/core/os/UnixUtil.i: src/core/os/UnixUtil.cc.i
+
+.PHONY : src/core/os/UnixUtil.i
+
+# target to preprocess a source file
+src/core/os/UnixUtil.cc.i:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixUtil.cc.i
+.PHONY : src/core/os/UnixUtil.cc.i
+
+src/core/os/UnixUtil.s: src/core/os/UnixUtil.cc.s
+
+.PHONY : src/core/os/UnixUtil.s
+
+# target to generate assembly for a file
+src/core/os/UnixUtil.cc.s:
+	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/src/core/os/UnixUtil.cc.s
+.PHONY : src/core/os/UnixUtil.cc.s
 
 # Help Target
 help:
@@ -243,15 +486,42 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/app/AgentWorker.o"
+	@echo "... src/app/AgentWorker.i"
+	@echo "... src/app/AgentWorker.s"
 	@echo "... src/app/NodeAgent.o"
 	@echo "... src/app/NodeAgent.i"
 	@echo "... src/app/NodeAgent.s"
-	@echo "... src/app/event/EventLoop.o"
-	@echo "... src/app/event/EventLoop.i"
-	@echo "... src/app/event/EventLoop.s"
-	@echo "... src/app/event/EventSignal.o"
-	@echo "... src/app/event/EventSignal.i"
-	@echo "... src/app/event/EventSignal.s"
+	@echo "... src/core/event/Channel.o"
+	@echo "... src/core/event/Channel.i"
+	@echo "... src/core/event/Channel.s"
+	@echo "... src/core/event/EventLoop.o"
+	@echo "... src/core/event/EventLoop.i"
+	@echo "... src/core/event/EventLoop.s"
+	@echo "... src/core/event/EventSignal.o"
+	@echo "... src/core/event/EventSignal.i"
+	@echo "... src/core/event/EventSignal.s"
+	@echo "... src/core/os/UnixCommand.o"
+	@echo "... src/core/os/UnixCommand.i"
+	@echo "... src/core/os/UnixCommand.s"
+	@echo "... src/core/os/UnixCountDownLatch.o"
+	@echo "... src/core/os/UnixCountDownLatch.i"
+	@echo "... src/core/os/UnixCountDownLatch.s"
+	@echo "... src/core/os/UnixInodeWatcher.o"
+	@echo "... src/core/os/UnixInodeWatcher.i"
+	@echo "... src/core/os/UnixInodeWatcher.s"
+	@echo "... src/core/os/UnixThread.o"
+	@echo "... src/core/os/UnixThread.i"
+	@echo "... src/core/os/UnixThread.s"
+	@echo "... src/core/os/UnixThreadProc.o"
+	@echo "... src/core/os/UnixThreadProc.i"
+	@echo "... src/core/os/UnixThreadProc.s"
+	@echo "... src/core/os/UnixTimer.o"
+	@echo "... src/core/os/UnixTimer.i"
+	@echo "... src/core/os/UnixTimer.s"
+	@echo "... src/core/os/UnixUtil.o"
+	@echo "... src/core/os/UnixUtil.i"
+	@echo "... src/core/os/UnixUtil.s"
 .PHONY : help
 
 

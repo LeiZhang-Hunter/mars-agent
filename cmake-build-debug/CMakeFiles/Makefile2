@@ -74,12 +74,12 @@ clean: CMakeFiles/mars.dir/clean
 CMakeFiles/mars.dir/all:
 	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/depend
 	$(MAKE) -f CMakeFiles/mars.dir/build.make CMakeFiles/mars.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5 "Built target mars"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14 "Built target mars"
 .PHONY : CMakeFiles/mars.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/mars.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles 14
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/mars.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/mars.dir/rule

@@ -12,7 +12,6 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
-#include "event/FileEvent.h"
 #include "Noncopyable.h"
 #include "os/UnixUtil.h"
 
@@ -28,15 +27,15 @@ namespace OS {
             watcherPath = _path;
         }
 
-        /**
-         * 设置inode观察者触发器
-         * @param event
-         * @return
-         */
-        bool setFileEvent(const std::shared_ptr<App::FileEvent>& event) {
-            fileEvent = event;
-            return true;
-        }
+//        /**
+//         * 设置inode观察者触发器
+//         * @param event
+//         * @return
+//         */
+//        bool setFileEvent(const std::shared_ptr<App::FileEvent>& event) {
+//            fileEvent = event;
+//            return true;
+//        }
 
         /**
          * 打开inode观察模式
@@ -85,7 +84,7 @@ namespace OS {
         int iNotifyId;
         int watcherFd;
         int count = 0;
-        std::shared_ptr<App::FileEvent> fileEvent;
+//        std::shared_ptr<App::FileEvent> fileEvent;
         std::string watcherPath;
     };
 }
