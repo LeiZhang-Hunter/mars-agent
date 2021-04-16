@@ -19,6 +19,10 @@
 #include "os/UnixCountDownLatch.h"
 #include "Callable.h"
 
+namespace Event {
+    class Channel;
+}
+
 namespace OS {
 
 
@@ -76,6 +80,9 @@ namespace OS {
         }
 
     private:
+
+        int createChannelFd();
+
         /**
          * 线程运行的主程序
          * @param arg
@@ -126,6 +133,9 @@ namespace OS {
 
         //互斥原语
         std::shared_ptr<UnixCountDownLatch> latch;
+
+        //管道
+        std::shared_ptr<Event::Channel> channel;
 
         //线程的处理程序
         UnixThreadProc *proc;

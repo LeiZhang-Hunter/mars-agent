@@ -28,19 +28,14 @@ void app::NodeAgent::init(const std::shared_ptr<Event::EventLoop>& threadLoop) {
  * 子线程负责具体的工作
  */
 void app::NodeAgent::run() {
-    //添加信号处理器
-//    std::cout << signalEvent.use_count() << std::endl;
-//    signalEvent->setSignal(SIGTERM, dispatcherStopCommand, this);
-//    signalEvent->bindEvent();
-
     //初始化当前循环的信号处理
     init(loop);
     //开启工作的线程池
     std::shared_ptr<app::AgentWorker> worker = std::make_shared<AgentWorker>();
     //设置线程初始化函数
     Callable::initCallable initFunctionParam = std::bind(&NodeAgent::init, shared_from_this(), _1);
+    //启动工作事件
     worker->Start();
-    std::cout << "thread" << std::endl;
     //开启线程池
     loop->loop();
 }

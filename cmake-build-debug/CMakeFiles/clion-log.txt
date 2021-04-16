@@ -1,4 +1,0 @@
-/home/zhanglei/soft/CLion-2020.1/clion-2020.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/zhanglei/ourc/mars-agent
--- Configuring done
--- Generating done
--- Build files have been written to: /home/zhanglei/ourc/mars-agent/cmake-build-debug

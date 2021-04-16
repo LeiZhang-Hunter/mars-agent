@@ -3,12 +3,12 @@ project(mars-agent)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 # Add -O0 to remove optimizations when using gcc
 IF (CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -event")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread -event")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
 ENDIF (CMAKE_COMPILER_IS_GNUCC)
 
 include_directories(src/app/include)
@@ -19,4 +19,5 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/src/core/os LIB_OS_CODE)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/app APP_CODE)
 
 link_libraries(event)
-add_executable(mars main.cpp ${APP_CODE} ${LIB_CODE} ${LIB_OS_CODE} ${LIB_EVENT_CODE})
+link_libraries(yaml-cpp)
+add_executable(mars main.cc ${APP_CODE} ${LIB_CODE} ${LIB_OS_CODE} ${LIB_EVENT_CODE})

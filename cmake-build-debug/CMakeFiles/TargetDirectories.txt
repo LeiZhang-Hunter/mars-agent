@@ -1,3 +1,0 @@
-/home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/zhanglei/ourc/mars-agent/cmake-build-debug/CMakeFiles/mars.dir

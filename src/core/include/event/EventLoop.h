@@ -13,6 +13,15 @@ extern "C" {
 
 namespace Event {
 
+    //管道的前置声明
+    class Channel;
+
+    //管道的map
+    typedef std::map<int, std::shared_ptr<Channel>> ChannelMap;
+
+    /**
+     * 信号派遣的函数类型
+     */
     typedef void(*dispatcherSignal)(evutil_socket_t sig, short events, void *param);
 
     class EventLoop : public Noncopyable {
@@ -32,18 +41,44 @@ namespace Event {
         //事件循环
         void loop();
 
+        /**
+         * 更新管道
+         * @param channel
+         * @return
+         */
+        bool updateChannel(const std::shared_ptr<Channel>& channel);
+
+        /**
+         * 获取基础事件
+         * @return
+         */
         struct event_base *getEventBase()
         {
             return base;
         }
+
+        static void onEvent(evutil_socket_t, short, void *);
 
         ~EventLoop() {
 
         };
 
     private:
+        /**
+         * 设置事件
+         * @param operation
+         * @param channel
+         * @return
+         */
+        bool eventSet(const std::shared_ptr<Channel>& channel);
+
+        //循环的基础指针
         struct event_base *base = nullptr;
-        std::shared_ptr<EventSignal> sigDispatcher;
+
+        /**
+         * 管道集合
+         */
+        ChannelMap channels;;
     };
 }
 #endif //MARS_AGENT_EVENTLOOP_H

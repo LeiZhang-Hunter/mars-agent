@@ -2,8 +2,11 @@
 // Created by zhanglei on 2020/11/12.
 //
 
+#include <sys/eventfd.h>
+
 #include "event/EventLoop.h"
 #include "os/UnixThread.h"
+#include "event/Channel.h"
 
 OS::UnixThread::UnixThread() {
     //初始化互斥锁
@@ -15,6 +18,18 @@ OS::UnixThread::UnixThread() {
     latch = std::make_shared<UnixCountDownLatch>(1);
     //创建独立的线程运行空间
     proc = new UnixThreadProc(loop, latch);
+    //创建管道的fd
+    int channelFd = createChannelFd();
+    if (channelFd != -1) {
+        channel = std::make_shared<Event::Channel>(loop, channelFd);
+        //channel->setOnReadCallable();
+        //开启读取事件
+        channel->enableReading(3);
+    }
+}
+
+int OS::UnixThread::createChannelFd() {
+    return eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
 }
 
 /**
@@ -46,6 +61,7 @@ void *OS::UnixThread::ThreadProc(void *arg) {
 
     //创建独立的线程运行空间
     auto *proc = static_cast<OS::UnixThreadProc *>(arg);
+
     //运行线程
     proc->runThread();
 
