@@ -23,7 +23,7 @@
 
 ## 采用的第三方库
 
-1. 网路通讯库libevent
+1.网路通讯库libevent
 
 下载地址:https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
 
