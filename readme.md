@@ -27,3 +27,11 @@
 
 下载地址:https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
 
+2.yaml-cpp
+
+mars使用的配置文件格式是yaml
+
+yaml-cpp的github地址为
+
+https://github.com/jbeder/yaml-cpp
+
