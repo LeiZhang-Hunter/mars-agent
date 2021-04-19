@@ -16,51 +16,39 @@
  * agent节点启动类
  */
 namespace app {
-class NodeAgent : public std::enable_shared_from_this<NodeAgent>{
+
+    class NodeAgentCommand;
+
+    class NodeAgent : public std::enable_shared_from_this<NodeAgent> {
 
     public:
         /**
          * 初始化工具
          */
-        NodeAgent() {
-            //初始化命令行解析工具
-            command = std::make_shared<OS::UnixCommand>();
-            loop = std::make_shared<Event::EventLoop>();
-            signalEvent = std::make_shared<Event::EventSignal>(loop);
-        }
+        NodeAgent();
 
-        /**
-         * 设置argc 参数
-         * @param argc
-         * @return
-         */
-        bool setCommandArgc(int argc) {
-            command->setCmdArgC(argc);
-            return true;
-        }
-
-        /**
-         * 设置argv参数
-         * @param argv
-         * @return
-         */
-        bool setCommandArgv(char **argv) {
-            command->setCmdArgV(argv);
-            return true;
-        }
 
         static void dispatcherStopCommand(int fd, short events, void *arg);
 
-        void init(const std::shared_ptr<Event::EventLoop>& threadLoop);
+        /**
+         * 初始化配置
+         */
+        void init(const std::shared_ptr<Event::EventLoop> &threadLoop);
 
+        /**
+         * 停止
+         */
         void stop();
 
-        void run();
+        /**
+         * 运行
+         */
+        void run(int argc, char **argv);
 
     private:
         std::shared_ptr<Event::EventLoop> loop;
         std::shared_ptr<Event::EventSignal> signalEvent;
-        std::shared_ptr<OS::UnixCommand> command;
+        std::shared_ptr<NodeAgentCommand> command;
     };
 }
 

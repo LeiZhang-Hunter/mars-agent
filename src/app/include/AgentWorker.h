@@ -6,9 +6,10 @@
 #define MARS_AGENT_AGENTWORKER_H
 
 #include "os/UnixThread.h"
+#include "Noncopyable.h"
 
 namespace app {
-    class AgentWorker : public OS::UnixThread {
+    class AgentWorker : public OS::UnixThread, public Noncopyable {
     public:
     };
 }
