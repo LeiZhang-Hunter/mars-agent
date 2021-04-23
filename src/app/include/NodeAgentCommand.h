@@ -10,6 +10,11 @@
 
 namespace OS {
     class UnixCommand;
+    class UnixPidFile;
+}
+
+namespace config {
+    class MarsConfig;
 }
 
 namespace app {
@@ -58,7 +63,19 @@ namespace app {
         //命令行解析器
         std::shared_ptr<OS::UnixCommand> command;
 
+        //配置文件路径
+        std::string configFile;
 
+        //执行的操作
+        std::string operation = "start";
+
+        std::shared_ptr<config::MarsConfig> config;
+
+        //pid的文件id
+        int pidFd;
+
+        //pid的文件锁
+        std::shared_ptr<OS::UnixPidFile> pidFileObject;
     };
 }
 

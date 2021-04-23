@@ -1,18 +1,36 @@
 mars:
   worker_number: 8
+  pid_file: /data/www-data/yaml.pid
+  #mars的核心功能健康检查
+  core:
+    env: ENV_NAME
+    name: APP_NAME
+    http_port: 11900
+    http_ip: 0.0.0.0
+    monitor:
+      - app: ugcaudit-async-svc
+        health_way: pid_file
+        health_path: /data/www-data/ugcaudit-async-svc.pid
+        health_enable: true
+        function: [prometheus, xxjob, apollo, atel, eureka]
+      - app: ugcaudit-nweb-api
+        health_way: http
+        health_port: 10000
+        health_path: /health
+        health_enable: true
+        function: [prometheus, xxjob, apollo, atel, eureka]
 
-  prometheus:
-    http_server_port: 11900
-    http_server_ip: 0.0.0.0
-    path: /usr/local/webserver/rig-agent-go/rig-agent.sock
-    health_enable: true
-    health_way: http
-    health_path: /health
-
-  xxjob:
-
-  apollo:
-
-  atel:
-
-  eureka:
+#  prometheus:
+#    http_server_port: 11900
+#    http_server_ip: 0.0.0.0
+#    path: /usr/local/webserver/rig-agent-go/rig-agent.sock
+#    health_path: /health
+#    metrics_path: /metrics
+#
+#  xxjob:
+#
+#  apollo:
+#
+#  atel:
+#
+#  eureka:
