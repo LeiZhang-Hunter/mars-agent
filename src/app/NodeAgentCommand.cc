@@ -77,18 +77,19 @@ bool app::NodeAgentCommand::dispatch() {
     //查看这个文件是否加锁了
     if (operation == "stop") {
         pid_t pid = pidFileObject->getPid();
-        if (pid > 0) {
-            int res = kill(pid, SIGTERM);
-            if (res == -1) {
-                std::cerr << strerror(errno) << std::endl;
-                exit(-1);
-            }
-            exit(0);
-        } else {
+
+        if (pid <= 0) {
             std::cerr << "get pid error!" << std::endl;
             exit(-1);
         }
+
+        int res = kill(pid, SIGTERM);
+        if (res == -1) {
+            std::cerr << strerror(errno) << std::endl;
+            exit(-1);
+        }
         exit(0);
+
     }
 
     if (!pidFileObject->tryWriteLock()) {
