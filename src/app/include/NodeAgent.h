@@ -14,10 +14,12 @@
 #include "os/UnixCommand.h"
 
 namespace function {
-    template<class T>
-    class MarsFunctionContainer;
+    class MarsFunctionObject;
+    namespace container {
+        class MarsFunctionContainer;
+    }
     namespace http {
-        class MarsHttpServer;
+        class MarsHttp;
     }
 }
 
@@ -30,7 +32,7 @@ namespace app {
 
     class AgentWorker;
 
-    typedef std::shared_ptr<function::MarsFunctionContainer<function::http::MarsHttpServer>> HttpContainerType;
+    typedef std::shared_ptr<function::container::MarsFunctionContainer> HttpContainerType;
 
     class NodeAgent : public std::enable_shared_from_this<NodeAgent> {
 
@@ -68,7 +70,7 @@ namespace app {
         std::shared_ptr<NodeAgentCommand> command;
         HttpContainerType httpContainer;
 
-        std::string httpCoreName = "httpKernel";
+        std::string httpCoreName = "http";
         std::vector<std::shared_ptr<app::AgentWorker>> workerPool;
     };
 }

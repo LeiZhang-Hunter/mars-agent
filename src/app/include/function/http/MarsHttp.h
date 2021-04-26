@@ -2,11 +2,13 @@
 // Created by zhanglei on 2021/4/23.
 //
 
-#ifndef MARS_AGENT_MARSHTTPSERVER_H
-#define MARS_AGENT_MARSHTTPSERVER_H
+#ifndef MARS_AGENT_MARSHTTP_H
+#define MARS_AGENT_MARSHTTP_H
 
 #include <string>
 #include <memory>
+
+#include "MarsFunctionObject.h"
 
 namespace app {
     class NodeAgent;
@@ -24,16 +26,16 @@ namespace function {
     namespace http {
         class MarsHttpRouter;
 
-        class MarsHttpServer {
+        class MarsHttp : public function::MarsFunctionObject{
         public:
-            MarsHttpServer(const std::shared_ptr<config::MarsConfig> &marsConfig,
-                           const std::shared_ptr<app::NodeAgent> &agent);
+            MarsHttp(const std::shared_ptr<config::MarsConfig> &marsConfig,
+                     const std::shared_ptr<app::NodeAgent> &agent);
 
             bool regClosure();
 
             static void httpRequestHandle(struct evhttp_request *, void *);
 
-            ~MarsHttpServer() {
+            ~MarsHttp() {
 
             }
 
@@ -50,4 +52,4 @@ namespace function {
     }
 }
 
-#endif //MARS_AGENT_MARSHTTPSERVER_H
+#endif //MARS_AGENT_MARSHTTP_H

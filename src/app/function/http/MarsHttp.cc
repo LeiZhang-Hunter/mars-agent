@@ -9,7 +9,7 @@ extern "C" {
 #include <iostream>
 #include <memory>
 
-#include "function/http/MarsHttpServer.h"
+#include "function/http/MarsHttp.h"
 #include "event/EventLoop.h"
 #include "config/MarsConfig.h"
 #include "function/http/MarsHttpRouter.h"
@@ -17,10 +17,10 @@ extern "C" {
 
 using namespace function::http;
 
-MarsHttpServer::MarsHttpServer(const std::shared_ptr<config::MarsConfig>& marsConfig,
-                                         const std::shared_ptr<app::NodeAgent> &agent) {
+MarsHttp::MarsHttp(const std::shared_ptr<config::MarsConfig> &marsConfig,
+                   const std::shared_ptr<app::NodeAgent> &agent) {
     httpIp = marsConfig->getHttpIp();
-    httpPort = static_cast<short >(marsConfig->getHttpPort());
+    httpPort = static_cast<short>(marsConfig->getHttpPort());
     bindLoop = agent->getLoop();
     httpBase = evhttp_new(bindLoop->getEventBase());
     routerHandle = std::make_shared<MarsHttpRouter>();
@@ -30,7 +30,7 @@ MarsHttpServer::MarsHttpServer(const std::shared_ptr<config::MarsConfig>& marsCo
     int ret = evhttp_bind_socket(httpBase, httpIp.c_str(), httpPort);
 
     if (ret == -1) {
-        printf("====line:%d,%s;error:%s\n", __LINE__," http server start failed.", strerror(errno));
+        printf("====line:%d,%s;error:%s\n", __LINE__, " http server start failed.", strerror(errno));
         exit(-1);
     }
 
@@ -42,17 +42,16 @@ MarsHttpServer::MarsHttpServer(const std::shared_ptr<config::MarsConfig>& marsCo
 
 }
 
-void MarsHttpServer::httpRequestHandle(struct evhttp_request *request, void *args) {
-    const struct evhttp_uri* evhttp_uri = evhttp_request_get_evhttp_uri(request);
+void MarsHttp::httpRequestHandle(struct evhttp_request *request, void *args) {
+    const struct evhttp_uri *evhttp_uri = evhttp_request_get_evhttp_uri(request);
     char url[8192];
-    evhttp_uri_join(const_cast<struct evhttp_uri*>(evhttp_uri), url, 8192);
+    evhttp_uri_join(const_cast<struct evhttp_uri *>(evhttp_uri), url, 8192);
     std::cout << url << std::endl;
 
-    struct evbuffer* evbuf = evbuffer_new();
-    if (!evbuf)
-    {
+    struct evbuffer *evbuf = evbuffer_new();
+    if (!evbuf) {
         printf("create evbuffer failed!\n");
-        return ;
+        return;
     }
 
     evbuffer_add_printf(evbuf, "Server response. Your request url is %s", url);
@@ -60,6 +59,6 @@ void MarsHttpServer::httpRequestHandle(struct evhttp_request *request, void *arg
     evbuffer_free(evbuf);
 }
 
-bool MarsHttpServer::regClosure() {
+bool MarsHttp::regClosure() {
     return true;
 }

@@ -10,18 +10,17 @@
 namespace function {
 
     namespace interface {
-        template<class T1>
         class MarsContainerInterface {
         public:
-            virtual std::shared_ptr<T1> get(const std::string &id) {
-                return std::shared_ptr<T1>();
+            virtual std::shared_ptr<function::MarsFunctionObject> get(const std::string &id) {
+                return std::shared_ptr<function::MarsFunctionObject>();
             }
 
             virtual bool has(const std::string &id) {
                 return true;
             }
 
-            virtual bool bind(const std::string &id, std::shared_ptr<T1> server) {
+            virtual bool bind(const std::string &id, const std::shared_ptr<function::MarsFunctionObject>& server) {
                 return true;
             }
         };

@@ -7,8 +7,8 @@
 #include "AgentWorker.h"
 #include "NodeAgentCommand.h"
 #include "config/MarsConfig.h"
-#include "function/MarsFunctionContainer.h"
-#include "function/http/MarsHttpServer.h"
+#include "function/container/MarsFunctionContainer.h"
+#include "function/http/MarsHttp.h"
 
 using namespace std::placeholders;
 
@@ -21,7 +21,7 @@ app::NodeAgent::NodeAgent() {
     signalEvent = std::make_shared<Event::EventSignal>(loop);
     //初始化当前循环的信号处理
     loop->sigAdd(SIGTERM, dispatcherStopCommand, loop->getEventBase());
-    httpContainer = std::make_shared<function::MarsFunctionContainer<function::http::MarsHttpServer>>();
+    httpContainer = std::make_shared<function::container::MarsFunctionContainer>();
     signalEvent->bindEvent();
 }
 
@@ -55,7 +55,7 @@ void app::NodeAgent::run(int argc, char **argv) {
 
     std::shared_ptr<config::MarsConfig> marsConfig = command->getMarsConfig();
 
-    std::shared_ptr<function::http::MarsHttpServer> httpServer = std::make_shared<function::http::MarsHttpServer>(
+    std::shared_ptr<function::http::MarsHttp> httpServer = std::make_shared<function::http::MarsHttp>(
             marsConfig, shared_from_this());
     //加载核心功能
     httpContainer->bind(httpCoreName, httpServer);
