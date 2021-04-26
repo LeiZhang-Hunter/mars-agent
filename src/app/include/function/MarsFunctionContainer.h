@@ -5,7 +5,7 @@
 #ifndef MARS_AGENT_MARSCONTAINER_H
 #define MARS_AGENT_MARSCONTAINER_H
 
-#include "MarsContainerInterface.h"
+#include "function/interface/MarsContainerInterface.h"
 #include <map>
 #include <string>
 #include <memory>
@@ -14,7 +14,7 @@ namespace function {
     class MarsHttpServer;
 
     template<class T1>
-    class MarsFunctionContainer : public MarsContainerInterface<T1> {
+    class MarsFunctionContainer : public interface::MarsContainerInterface<T1> {
         typedef std::map<std::string, std::shared_ptr<T1>> ContainerMap;
     public:
         std::shared_ptr<T1> get(const std::string &id);

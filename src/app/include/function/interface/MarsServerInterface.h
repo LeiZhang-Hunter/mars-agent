@@ -6,9 +6,11 @@
 #define MARS_AGENT_MARSSERVERINTERFACE_H
 
 namespace function {
-    class MarsServerInterface {
+    namespace interface {
+        class MarsServerInterface {
 
-    };
+        };
+    }
 }
 
 #endif //MARS_AGENT_MARSSERVERINTERFACE_H

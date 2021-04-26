@@ -6,9 +6,11 @@
 #define MARS_AGENT_MARSCLIENTINTERFACE_H
 
 namespace function {
-    class MarsClientInterface {
+    namespace interface {
+        class MarsClientInterface {
 
-    };
+        };
+    }
 }
 
 #endif //MARS_AGENT_MARSCLIENTINTERFACE_H

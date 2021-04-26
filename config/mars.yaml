@@ -8,7 +8,8 @@ mars:
     http_port: 11900
     http_ip: 0.0.0.0
     http_timeout: 5
-    monitor:
+    #健康监测
+    health:
       - app: ugcaudit-async-svc
         health_way: pid_file
         health_path: /data/www-data/ugcaudit-async-svc.pid
@@ -20,13 +21,18 @@ mars:
         health_path: /health
         health_enable: true
         function: [prometheus, xxjob, apollo, atel, eureka]
+    #普罗米修斯数据监测
+    prometheus:
+      http_server_port: 11900
+      http_server_ip: 0.0.0.0
+      path: /usr/local/webserver/rig-agent-go/rig-agent.sock
+      health_path: /health
+      metrics_path: /metrics
 
-#  prometheus:
-#    http_server_port: 11900
-#    http_server_ip: 0.0.0.0
-#    path: /usr/local/webserver/rig-agent-go/rig-agent.sock
-#    health_path: /health
-#    metrics_path: /metrics
+
+  extension:
+
+
 #
 #  xxjob:
 #
