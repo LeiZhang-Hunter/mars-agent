@@ -28,10 +28,15 @@ namespace function {
 
         class MarsHttp : public function::MarsFunctionObject{
         public:
-            MarsHttp(const std::shared_ptr<config::MarsConfig> &marsConfig,
-                     const std::shared_ptr<app::NodeAgent> &agent);
+            MarsHttp(const std::shared_ptr<app::NodeAgent> &agent);
 
-            bool regClosure();
+            void initFunction();
+
+            void shutdownFunction();
+
+            std::shared_ptr<MarsHttpRouter> getRouter() {
+                return routerHandle;
+            }
 
             static void httpRequestHandle(struct evhttp_request *, void *);
 
@@ -42,6 +47,7 @@ namespace function {
         private:
             std::string httpIp;
             short httpPort;
+            int httpTimeout;
             std::shared_ptr<Event::EventLoop> bindLoop;
             //http的基础事例
             struct evhttp *httpBase;

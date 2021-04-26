@@ -9,6 +9,7 @@
 #include "config/MarsConfig.h"
 #include "function/container/MarsFunctionContainer.h"
 #include "function/http/MarsHttp.h"
+#include "module/MarsCoreModule.h"
 
 using namespace std::placeholders;
 
@@ -21,8 +22,8 @@ app::NodeAgent::NodeAgent() {
     signalEvent = std::make_shared<Event::EventSignal>(loop);
     //初始化当前循环的信号处理
     loop->sigAdd(SIGTERM, dispatcherStopCommand, loop->getEventBase());
-    httpContainer = std::make_shared<function::container::MarsFunctionContainer>();
     signalEvent->bindEvent();
+    coreModule = std::make_shared<module::MarsCoreModule>(shared_from_this());
 }
 
 void app::NodeAgent::dispatcherStopCommand(evutil_socket_t sig, short events, void *param) {
@@ -53,13 +54,10 @@ void app::NodeAgent::run(int argc, char **argv) {
     //解析命令
     command->dispatch();
 
-    std::shared_ptr<config::MarsConfig> marsConfig = command->getMarsConfig();
+    marsConfig = command->getMarsConfig();
 
-    std::shared_ptr<function::http::MarsHttp> httpServer = std::make_shared<function::http::MarsHttp>(
-            marsConfig, shared_from_this());
-    //加载核心功能
-    httpContainer->bind(httpCoreName, httpServer);
-
+    //加载功能模块
+    coreModule->moduleInit();
 
     unsigned short workerNumber = marsConfig->getWorkerNumber();
     for (int i = 0; i < workerNumber; i++) {
@@ -76,4 +74,7 @@ void app::NodeAgent::run(int argc, char **argv) {
     //开启线程池
     std::cout << "loop1" << std::endl;
     loop->loop();
+
+    //销毁功能模块
+    coreModule->moduleDestroy();
 }

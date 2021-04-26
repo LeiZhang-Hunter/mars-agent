@@ -7,7 +7,14 @@
 
 namespace function {
     class MarsFunctionObject {
+    public:
+        virtual void initFunction() {
 
+        }
+
+        virtual void shutdownFunction() {
+
+        }
     };
 }
 

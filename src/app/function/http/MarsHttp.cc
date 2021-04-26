@@ -10,23 +10,25 @@ extern "C" {
 #include <memory>
 
 #include "function/http/MarsHttp.h"
-#include "event/EventLoop.h"
 #include "config/MarsConfig.h"
 #include "function/http/MarsHttpRouter.h"
 #include "NodeAgent.h"
 
 using namespace function::http;
 
-MarsHttp::MarsHttp(const std::shared_ptr<config::MarsConfig> &marsConfig,
-                   const std::shared_ptr<app::NodeAgent> &agent) {
+MarsHttp::MarsHttp(const std::shared_ptr<app::NodeAgent> &agent) {
+    std::shared_ptr<config::MarsConfig> marsConfig = agent->getMarsConfig();
     httpIp = marsConfig->getHttpIp();
     httpPort = static_cast<short>(marsConfig->getHttpPort());
     bindLoop = agent->getLoop();
     httpBase = evhttp_new(bindLoop->getEventBase());
     routerHandle = std::make_shared<MarsHttpRouter>();
     nodeAgent = agent;
+    httpTimeout = marsConfig->getHttpTimeout();
+}
 
-    //启动http服务端
+void MarsHttp::initFunction() {
+//启动http服务端
     int ret = evhttp_bind_socket(httpBase, httpIp.c_str(), httpPort);
 
     if (ret == -1) {
@@ -35,10 +37,13 @@ MarsHttp::MarsHttp(const std::shared_ptr<config::MarsConfig> &marsConfig,
     }
 
     //设置请求超时时间(s)
-    evhttp_set_timeout(httpBase, marsConfig->getHttpTimeout());
+    evhttp_set_timeout(httpBase, httpTimeout);
 
     //设置处理函数
     evhttp_set_gencb(httpBase, httpRequestHandle, this);
+}
+
+void MarsHttp::shutdownFunction() {
 
 }
 
@@ -59,6 +64,3 @@ void MarsHttp::httpRequestHandle(struct evhttp_request *request, void *args) {
     evbuffer_free(evbuf);
 }
 
-bool MarsHttp::regClosure() {
-    return true;
-}

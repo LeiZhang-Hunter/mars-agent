@@ -13,6 +13,14 @@
 #include "event/EventSignal.h"
 #include "os/UnixCommand.h"
 
+namespace config {
+    class MarsConfig;
+}
+
+namespace module {
+    class MarsCoreModule;
+}
+
 namespace function {
     class MarsFunctionObject;
     namespace container {
@@ -32,7 +40,6 @@ namespace app {
 
     class AgentWorker;
 
-    typedef std::shared_ptr<function::container::MarsFunctionContainer> HttpContainerType;
 
     class NodeAgent : public std::enable_shared_from_this<NodeAgent> {
 
@@ -50,6 +57,10 @@ namespace app {
          */
         void init(const std::shared_ptr<Event::EventLoop> &threadLoop);
 
+        std::shared_ptr<config::MarsConfig> getMarsConfig() {
+            return marsConfig;
+        }
+
         /**
          * 停止
          */
@@ -64,14 +75,17 @@ namespace app {
             return loop;
         }
 
+        std::shared_ptr<module::MarsCoreModule> getCoreModule() {
+            return coreModule;
+        }
+
     private:
         std::shared_ptr<Event::EventLoop> loop;
         std::shared_ptr<Event::EventSignal> signalEvent;
         std::shared_ptr<NodeAgentCommand> command;
-        HttpContainerType httpContainer;
-
-        std::string httpCoreName = "http";
+        std::shared_ptr<config::MarsConfig> marsConfig;
         std::vector<std::shared_ptr<app::AgentWorker>> workerPool;
+        std::shared_ptr<module::MarsCoreModule> coreModule;
     };
 }
 

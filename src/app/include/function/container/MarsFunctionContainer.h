@@ -11,6 +11,10 @@
 #include <string>
 #include <memory>
 
+namespace config {
+    class MarsConfig;
+}
+
 namespace function {
     namespace container {
         class MarsFunctionContainer : public interface::MarsContainerInterface {
@@ -22,48 +26,20 @@ namespace function {
 
             bool bind(const std::string &id, const std::shared_ptr<function::MarsFunctionObject> &server);
 
+            bool init(const std::shared_ptr<config::MarsConfig>& marsConfig);
+
+            ContainerMap getMap() {
+                return containerMap;
+            }
+
         private:
 
             /**
              * 绑定列表
              */
-            ContainerMap httpServerContainer;
+            ContainerMap containerMap;
 
         };
-
-        std::shared_ptr<function::MarsFunctionObject> MarsFunctionContainer::get(const std::string &id) {
-
-            if (id.empty()) {
-                return std::shared_ptr<function::MarsFunctionObject>();
-            }
-
-            auto instance = httpServerContainer.find(id);
-            if (instance != httpServerContainer.end()) {
-                return std::shared_ptr<function::MarsFunctionObject>();
-            }
-
-            return instance->second;
-        }
-
-        bool MarsFunctionContainer::has(const std::string &id) {
-
-            if (id.empty()) {
-                return false;
-            }
-
-            auto instance = httpServerContainer.find(id);
-            return instance != httpServerContainer.end();
-        }
-
-        bool MarsFunctionContainer::bind(const std::string &id,
-                                         const std::shared_ptr<function::MarsFunctionObject> &server) {
-            if (id.empty()) {
-                return false;
-            }
-            auto instance = httpServerContainer.find(id);
-            return !(instance != httpServerContainer.end());
-        }
-
     }
 }
 

@@ -21,10 +21,13 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/src/core/os LIB_OS_CODE)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/app/function LIB_OS_CODE)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/app/function/http FUNCTION_HTTP_CODE)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/app/function/health FUNCTION_HEALTH_CODE)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/app/function/container FUNCTION_CONTAINER_CODE)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/app APP_CODE)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/app/config CONFIG_CODE)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/app/module MODULE_CODE)
 
 link_libraries(event)
 link_libraries(yaml-cpp)
 add_executable(mars main.cc ${APP_CODE} ${LIB_CODE} ${LIB_OS_CODE} ${LIB_EVENT_CODE}
-        ${FUNCTION_HTTP_CODE} ${CONFIG_CODE} ${FUNCTION_HEALTH_CODE})
+        ${FUNCTION_HTTP_CODE} ${CONFIG_CODE} ${FUNCTION_HEALTH_CODE} ${FUNCTION_CONTAINER_CODE}
+        ${MODULE_CODE})
