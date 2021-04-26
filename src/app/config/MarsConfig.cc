@@ -61,6 +61,11 @@ bool config::MarsConfig::loadConfig(const std::string &configPath) {
         marsHttpIp = yamlHttpIp.as<std::string>();
     }
 
+    auto yamlHttpTimeout = yamlCore["http_timeout"];
+    if (yamlHttpTimeout) {
+        marsHttpTimeout = yamlHttpTimeout.as<int>();
+    }
+
     return true;
 }
 

@@ -6,6 +6,10 @@
 #include "NodeAgent.h"
 #include "AgentWorker.h"
 #include "NodeAgentCommand.h"
+#include "config/MarsConfig.h"
+#include "function/MarsFunctionContainer.h"
+#include "function/MarsHttpServer.h"
+
 using namespace std::placeholders;
 
 app::NodeAgent::NodeAgent() {
@@ -17,6 +21,7 @@ app::NodeAgent::NodeAgent() {
     signalEvent = std::make_shared<Event::EventSignal>(loop);
     //初始化当前循环的信号处理
     loop->sigAdd(SIGTERM, dispatcherStopCommand, loop->getEventBase());
+    httpContainer = std::make_shared<function::MarsFunctionContainer<function::MarsHttpServer>>();
     signalEvent->bindEvent();
 }
 
@@ -31,7 +36,7 @@ void app::NodeAgent::stop() {
     loop->quit();
 }
 
-void app::NodeAgent::init(const std::shared_ptr<Event::EventLoop>& threadLoop) {
+void app::NodeAgent::init(const std::shared_ptr<Event::EventLoop> &threadLoop) {
     threadLoop->sigAdd(SIGTERM, dispatcherStopCommand, threadLoop->getEventBase());
     signalEvent->bindEvent();
 }
@@ -41,18 +46,33 @@ void app::NodeAgent::init(const std::shared_ptr<Event::EventLoop>& threadLoop) {
  * 子线程负责处理逻辑
  * 子线程负责具体的工作
  */
-void app::NodeAgent::run(int argc, char** argv) {
+void app::NodeAgent::run(int argc, char **argv) {
     command->setCommandArgc(argc);
     command->setCommandArgv(argv);
 
     //解析命令
     command->dispatch();
-    //开启工作的线程池
-    std::shared_ptr<app::AgentWorker> worker = std::make_shared<AgentWorker>();
-    //设置线程初始化函数
-    Callable::initCallable initFunctionParam = std::bind(&NodeAgent::init, shared_from_this(), _1);
-    //启动工作事件
-    worker->Start();
+
+    std::shared_ptr<config::MarsConfig> marsConfig = command->getMarsConfig();
+
+    std::shared_ptr<function::MarsHttpServer> httpServer = std::make_shared<function::MarsHttpServer>(marsConfig, shared_from_this());
+    //加载核心功能
+    httpContainer->bind(httpCoreName, httpServer);
+
+
+    unsigned short workerNumber = marsConfig->getWorkerNumber();
+    for (int i = 0; i < workerNumber; i++) {
+        //开启工作的线程池
+        std::shared_ptr<app::AgentWorker> worker = std::make_shared<AgentWorker>();
+        //加入线程池
+        workerPool.push_back((worker));
+        //设置线程初始化函数
+        Callable::initCallable initFunctionParam = std::bind(&NodeAgent::init, shared_from_this(), _1);
+        //启动工作事件
+        worker->Start();
+    }
+
     //开启线程池
+    std::cout << "loop1" << std::endl;
     loop->loop();
 }

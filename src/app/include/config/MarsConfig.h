@@ -29,31 +29,29 @@ namespace config {
         }
 
 
-        std::string getEnvName()
-        {
+        std::string getEnvName() {
             return envName;
         }
 
-        std::string getApplicationName()
-        {
+        std::string getApplicationName() {
             return marsApplicationName;
         }
 
-        unsigned short getHttpPort()
-        {
+        unsigned short getHttpPort() {
             return marsHttpPort;
         }
 
-        std::string getHttpIp()
-        {
+        std::string getHttpIp() {
             return marsHttpIp;
         }
 
-        std::string getPidFile()
-        {
+        std::string getPidFile() {
             return pidFile;
         }
 
+        int getHttpTimeout() {
+            return marsHttpTimeout;
+        }
 
     private:
 
@@ -69,7 +67,11 @@ namespace config {
 
         std::string marsHttpIp = "0.0.0.0";
 
+        int marsHttpTimeout = 5;
+
         std::string pidFile;
+
+
 
     };
 }

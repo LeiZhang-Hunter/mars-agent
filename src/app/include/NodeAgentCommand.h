@@ -52,6 +52,11 @@ namespace app {
 
         bool dispatch();
 
+        std::shared_ptr<config::MarsConfig>& getMarsConfig()
+        {
+            return config;
+        }
+
     private:
 
         //获取配置文件地址

@@ -7,10 +7,16 @@
 
 #include <memory>
 #include <csignal>
+#include <vector>
 
 #include "event/EventLoop.h"
 #include "event/EventSignal.h"
 #include "os/UnixCommand.h"
+
+namespace function {
+    template <class T> class MarsFunctionContainer;
+    class MarsHttpServer;
+}
 
 /**
  * agent节点启动类
@@ -18,6 +24,9 @@
 namespace app {
 
     class NodeAgentCommand;
+    class AgentWorker;
+
+    typedef std::shared_ptr<function::MarsFunctionContainer<function::MarsHttpServer>> HttpContainerType;
 
     class NodeAgent : public std::enable_shared_from_this<NodeAgent> {
 
@@ -45,10 +54,18 @@ namespace app {
          */
         void run(int argc, char **argv);
 
+        std::shared_ptr<Event::EventLoop> getLoop() {
+            return loop;
+        }
+
     private:
         std::shared_ptr<Event::EventLoop> loop;
         std::shared_ptr<Event::EventSignal> signalEvent;
         std::shared_ptr<NodeAgentCommand> command;
+        HttpContainerType httpContainer;
+
+        std::string httpCoreName = "httpKernel";
+        std::vector<std::shared_ptr<app::AgentWorker>> workerPool;
     };
 }
 
