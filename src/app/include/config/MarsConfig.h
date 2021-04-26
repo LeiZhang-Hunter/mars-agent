@@ -4,12 +4,10 @@
 
 #ifndef MARS_AGENT_MARSCONFIG_H
 #define MARS_AGENT_MARSCONFIG_H
-
+#include "yaml-cpp/yaml.h"
 #include <string>
 
-namespace YAML {
-    class Node;
-}
+
 namespace config {
     class MarsConfig {
     public:
@@ -53,7 +51,27 @@ namespace config {
             return marsHttpTimeout;
         }
 
+
     private:
+
+        //生成worker的进程数目
+        bool fillWorkerNumber();
+
+        bool fillHealthEnable();
+
+        bool fillPidFile();
+
+        bool fillCore();
+
+        bool fillEnv();
+
+        bool fillApplicationName();
+
+        bool fillHttpPort();
+
+        bool fillHttpIp();
+
+        bool fillHttpTimeOut();
 
         unsigned short workerNumber = 1;
 
@@ -71,7 +89,9 @@ namespace config {
 
         std::string pidFile;
 
+        YAML::Node yamMars;
 
+        YAML::Node yamlCore;
 
     };
 }

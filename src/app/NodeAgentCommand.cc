@@ -59,9 +59,14 @@ bool app::NodeAgentCommand::dispatch() {
     }
 
     //加载yaml
-    bool loadRet = config->loadConfig(configFile);
-    if (!loadRet) {
-        std::cerr << "The configuration load error!" << std::endl;
+    try {
+        bool loadRet = config->loadConfig(configFile);
+        if (!loadRet) {
+            std::cerr << "The configuration load error!" << std::endl;
+            exit(-1);
+        }
+    } catch (std::exception& err) {
+        std::cerr << err.what() << std::endl;
         exit(-1);
     }
 
