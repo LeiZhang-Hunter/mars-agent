@@ -28,12 +28,12 @@ namespace common {
             return leftTrimString(rightTrimString(strSource, strDrop), strDrop);
         }
 
-        std::string strTolower(const std::string& str)
+        void strTolower(std::string& str)
         {
             std::transform(str.begin(), str.end(), str.begin(), ::tolower);
         }
 
-        std::string strToUpper(const std::string& str)
+        void strToUpper(std::string& str)
         {
             std::transform(str.begin(), str.end(), str.begin(), ::toupper);
         }

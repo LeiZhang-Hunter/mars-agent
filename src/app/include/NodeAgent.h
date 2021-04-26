@@ -14,8 +14,11 @@
 #include "os/UnixCommand.h"
 
 namespace function {
-    template <class T> class MarsFunctionContainer;
-    class MarsHttpServer;
+    template<class T>
+    class MarsFunctionContainer;
+    namespace http {
+        class MarsHttpServer;
+    }
 }
 
 /**
@@ -24,9 +27,10 @@ namespace function {
 namespace app {
 
     class NodeAgentCommand;
+
     class AgentWorker;
 
-    typedef std::shared_ptr<function::MarsFunctionContainer<function::MarsHttpServer>> HttpContainerType;
+    typedef std::shared_ptr<function::MarsFunctionContainer<function::http::MarsHttpServer>> HttpContainerType;
 
     class NodeAgent : public std::enable_shared_from_this<NodeAgent> {
 

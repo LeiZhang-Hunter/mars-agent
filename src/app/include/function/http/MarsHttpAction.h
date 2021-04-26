@@ -6,13 +6,15 @@
 #define MARS_AGENT_MARSHTTPACTION_H
 
 namespace function {
-    class MarsHttpAction {
-    public:
+    namespace http {
+        class MarsHttpAction {
+        public:
+            std::string uses;
 
-        std::string uses;
+            std::string middleware;
+        };
+    }
 
-        std::string middleware;
-    };
 }
 
 #endif //MARS_AGENT_MARSHTTPACTION_H

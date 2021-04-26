@@ -9,19 +9,21 @@ extern "C" {
 #include <iostream>
 #include <memory>
 
-#include "function/MarsHttpServer.h"
+#include "function/http/MarsHttpServer.h"
 #include "event/EventLoop.h"
 #include "config/MarsConfig.h"
-#include "MarsHttpRouter.h"
+#include "function/http/MarsHttpRouter.h"
 #include "NodeAgent.h"
 
-function::MarsHttpServer::MarsHttpServer(const std::shared_ptr<config::MarsConfig>& marsConfig,
+using namespace function::http;
+
+MarsHttpServer::MarsHttpServer(const std::shared_ptr<config::MarsConfig>& marsConfig,
                                          const std::shared_ptr<app::NodeAgent> &agent) {
     httpIp = marsConfig->getHttpIp();
     httpPort = static_cast<short >(marsConfig->getHttpPort());
     bindLoop = agent->getLoop();
     httpBase = evhttp_new(bindLoop->getEventBase());
-    routerHandle = std::make_shared<function::MarsHttpRouter>();
+    routerHandle = std::make_shared<MarsHttpRouter>();
     nodeAgent = agent;
 
     //启动http服务端
@@ -40,7 +42,7 @@ function::MarsHttpServer::MarsHttpServer(const std::shared_ptr<config::MarsConfi
 
 }
 
-void function::MarsHttpServer::httpRequestHandle(struct evhttp_request *request, void *args) {
+void MarsHttpServer::httpRequestHandle(struct evhttp_request *request, void *args) {
     const struct evhttp_uri* evhttp_uri = evhttp_request_get_evhttp_uri(request);
     char url[8192];
     evhttp_uri_join(const_cast<struct evhttp_uri*>(evhttp_uri), url, 8192);
@@ -58,6 +60,6 @@ void function::MarsHttpServer::httpRequestHandle(struct evhttp_request *request,
     evbuffer_free(evbuf);
 }
 
-bool function::MarsHttpServer::regClosure() {
+bool MarsHttpServer::regClosure() {
     return true;
 }
