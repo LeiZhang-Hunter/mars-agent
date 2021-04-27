@@ -9,6 +9,9 @@
 
 #include "MarsFunctionObject.h"
 
+namespace YAML {
+    class Node;
+}
 
 namespace app {
     class NodeAgent;
@@ -21,6 +24,9 @@ namespace function {
     }
 
     namespace health {
+
+        class MarsHealthConfig;
+
         class MarsHealth : public MarsFunctionObject {
         public:
             MarsHealth(const std::shared_ptr<app::NodeAgent> &agent);
@@ -32,7 +38,11 @@ namespace function {
             ~MarsHealth();
 
         private:
+            //加载配置
+            bool loadConfig(const YAML::Node& yamlConfig);
+            //路由
             std::shared_ptr<http::MarsHttpRouter> router;
+            std::map<std::string, std::shared_ptr<MarsHealthConfig>> healthConfig;
         };
     }
 }

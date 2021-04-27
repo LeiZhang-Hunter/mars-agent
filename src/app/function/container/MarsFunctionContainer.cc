@@ -16,7 +16,11 @@ bool MarsFunctionContainer::bind(const std::string &id,
         return false;
     }
     auto instance = containerMap.find(id);
-    return !(instance != containerMap.end());
+    if (instance != containerMap.end()) {
+        return false;
+    }
+    containerMap[id] = server;
+    return true;
 }
 
 bool MarsFunctionContainer::has(const std::string &id) {
@@ -36,7 +40,7 @@ std::shared_ptr<function::MarsFunctionObject> MarsFunctionContainer::get(const s
     }
 
     auto instance = containerMap.find(id);
-    if (instance != containerMap.end()) {
+    if (instance == containerMap.end()) {
         return std::shared_ptr<function::MarsFunctionObject>();
     }
 

@@ -15,13 +15,12 @@ mars:
         health_way: pid_file
         health_path: /data/www-data/ugcaudit-async-svc.pid
         health_enable: true
-        function: [prometheus, xxjob, apollo, atel, eureka]
       - app: ugcaudit-nweb-api
         health_way: http
         health_port: 10000
+        health_ip: 0.0.0.0
         health_path: /health
         health_enable: true
-        function: [prometheus, xxjob, apollo, atel, eureka]
     #普罗米修斯数据监测
     Prometheus:
       http_server_port: 11900
@@ -34,11 +33,3 @@ mars:
   extension:
 
 
-#
-#  xxjob:
-#
-#  apollo:
-#
-#  atel:
-#
-#  eureka:

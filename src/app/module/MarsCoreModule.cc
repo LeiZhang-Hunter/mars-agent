@@ -12,15 +12,8 @@ using namespace module;
 using namespace function;
 
 MarsCoreModule::MarsCoreModule(const std::shared_ptr<app::NodeAgent>& agent) {
+    nodeAgent = agent;
     container = std::make_shared<function::container::MarsFunctionContainer>();
-    loadApollo();
-    loadEureka();
-    loadHealth();
-    loadHttp();
-    loadOs();
-    loadPromethean();
-    loadWheel();
-    loadJob();
 }
 
 void MarsCoreModule::loadApollo() {
@@ -58,6 +51,15 @@ void MarsCoreModule::loadJob() {
 }
 
 void MarsCoreModule::moduleInit() {
+    loadHttp();
+    loadApollo();
+    loadEureka();
+    loadHealth();
+    loadOs();
+    loadPromethean();
+    loadWheel();
+    loadJob();
+
     auto moduleMap = container->getMap();
     auto moduleMapBegin = moduleMap.cbegin();
     auto moduleMapEnd = moduleMap.cend();

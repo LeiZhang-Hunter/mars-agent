@@ -41,8 +41,13 @@ namespace module {
         template<class T>
         std::shared_ptr<T> getObject(const char* objectName) {
             std::string id(objectName);
-            std::shared_ptr<T> object = std::dynamic_pointer_cast<T>(container->get(id));
-            return object;
+            std::shared_ptr<function::MarsFunctionObject> object = container->get(id);
+            if (!object) {
+                return std::shared_ptr<T>();
+            }
+
+            std::shared_ptr<T> returnObject = std::dynamic_pointer_cast<T>(object);
+            return returnObject;
         }
 
         //初始化模块

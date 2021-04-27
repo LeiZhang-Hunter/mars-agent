@@ -23,7 +23,6 @@ app::NodeAgent::NodeAgent() {
     //初始化当前循环的信号处理
     loop->sigAdd(SIGTERM, dispatcherStopCommand, loop->getEventBase());
     signalEvent->bindEvent();
-    coreModule = std::make_shared<module::MarsCoreModule>(shared_from_this());
 }
 
 void app::NodeAgent::dispatcherStopCommand(evutil_socket_t sig, short events, void *param) {
@@ -55,10 +54,9 @@ void app::NodeAgent::run(int argc, char **argv) {
     command->dispatch();
 
     marsConfig = command->getMarsConfig();
-
-    //加载功能模块
+    //加载核心
+    coreModule = std::make_shared<module::MarsCoreModule>(shared_from_this());
     coreModule->moduleInit();
-
     unsigned short workerNumber = marsConfig->getWorkerNumber();
     for (int i = 0; i < workerNumber; i++) {
         //开启工作的线程池
