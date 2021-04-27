@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "function/MarsFunctionName.h"
+#include "function/container/MarsFunctionContainer.h"
 
 namespace app {
     class NodeAgent;
@@ -19,9 +20,7 @@ namespace config {
 }
 
 namespace function {
-    namespace container {
-        class MarsFunctionContainer;
-    }
+    class MarsFunctionObject;
 
     namespace http {
         class MarsHttp;
@@ -39,7 +38,12 @@ namespace module {
             return container;
         }
 
-        std::shared_ptr<function::http::MarsHttp> getHttpObject();
+        template<class T>
+        std::shared_ptr<T> getObject(const char* objectName) {
+            std::string id(objectName);
+            std::shared_ptr<T> object = std::dynamic_pointer_cast<T>(container->get(id));
+            return object;
+        }
 
         //初始化模块
         void moduleInit();

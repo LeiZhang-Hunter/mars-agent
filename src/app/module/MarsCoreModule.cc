@@ -78,11 +78,6 @@ void MarsCoreModule::moduleDestroy() {
     }
 }
 
-std::shared_ptr<http::MarsHttp> MarsCoreModule::getHttpObject() {
-    std::shared_ptr<http::MarsHttp> http = std::dynamic_pointer_cast<http::MarsHttp>(container->get(httpModuleName));
-    return http;
-}
-
 MarsCoreModule::~MarsCoreModule() {
 
 }

@@ -10,7 +10,8 @@
 using namespace function::health;
 
 MarsHealth::MarsHealth(const std::shared_ptr<app::NodeAgent> &agent) {
-    router = agent->getCoreModule()->getHttpObject()->getRouter();
+    router = agent->getCoreModule()->getObject<http::MarsHttp>(HTTP_MODULE_NAME)->getRouter();
+    //加载配置
     agent->getMarsConfig();
 }
 
