@@ -7,6 +7,10 @@
 #include "function/http/MarsHttpRouter.h"
 #include "config/MarsConfig.h"
 #include "module/MarsCoreModule.h"
+#include "function/http/MarsHttpAction.h"
+#include "function/health/MarsHealthConfig.h"
+#include "function/health/MarsHttpServerHealth.h"
+#include "function/health/MarsProcessHealth.h"
 
 using namespace function::health;
 
@@ -21,7 +25,10 @@ MarsHealth::MarsHealth(const std::shared_ptr<app::NodeAgent> &agent) {
 }
 
 void MarsHealth::initFunction() {
-
+    //循环配置文件
+    for (auto it = healthConfig.begin(); it != healthConfig.end(); it++) {
+        std::shared_ptr<http::MarsHttpAction> action = std::make_shared<http::MarsHttpAction>();
+    }
 }
 
 void MarsHealth::shutdownFunction() {
@@ -30,12 +37,21 @@ void MarsHealth::shutdownFunction() {
 
 bool MarsHealth::loadConfig(const YAML::Node& yamlConfig) {
     auto yamlHealth = yamlConfig[HEALTH_MODULE_NAME];
-    return !!yamlHealth;
-
-    for(YAML::const_iterator it= yamlHealth.begin(); it != yamlHealth.end();++it)
-    {
-        std::cout << it->first.as<std::string>() << ":" << it->second.as<int>() << std::endl;
+    if (!yamlHealth) {
+        return false;
     }
+
+    for(unsigned i=0; i < yamlHealth.size(); i++) {
+        auto yamlAppName = yamlHealth[i]["app"];
+        if (!yamlAppName)
+            continue;
+
+        std::string healthAppName = yamlAppName.as<std::string>();
+        std::shared_ptr<MarsHealthConfig> config = std::make_shared<MarsHealthConfig>();
+        config->load(yamlHealth[i]);
+        healthConfig[healthAppName] = config;
+    }
+    return true;
 }
 
 MarsHealth::~MarsHealth() {

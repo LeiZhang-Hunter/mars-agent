@@ -10,7 +10,7 @@ mars:
       http_ip: 0.0.0.0
       http_timeout: 5
     #健康监测
-    Health:
+    health:
       - app: ugcaudit-async-svc
         health_way: pid_file
         health_path: /data/www-data/ugcaudit-async-svc.pid

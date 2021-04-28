@@ -2,6 +2,7 @@
 // Created by zhanglei on 2021/4/20.
 //
 #include <string>
+#include <iostream>
 
 #include "config/MarsConfig.h"
 
@@ -17,11 +18,13 @@ bool config::MarsConfig::loadConfig(const std::string &configPath) {
         return false;
     }
 
+    //填充核心配置
+    fillCore();
+
     //生成各种配置选项
     fillWorkerNumber();
     fillHealthEnable();
     fillPidFile();
-    fillCore();
     fillEnv();
     fillApplicationName();
     fillHttpPort();
@@ -83,7 +86,10 @@ bool config::MarsConfig::fillPidFile() {
 
 bool config::MarsConfig::fillCore() {
     yamlCore = yamMars["core"];
-    return !!yamlCore;
+    if (!yamlCore) {
+        throw std::logic_error("yaml config core error!");
+    }
+    return true;
 }
 
 bool config::MarsConfig::fillEnv() {

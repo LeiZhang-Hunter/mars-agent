@@ -31,8 +31,10 @@ namespace function {
         public:
             MarsHealth(const std::shared_ptr<app::NodeAgent> &agent);
 
+            //初始化
             void initFunction();
 
+            //结束
             void shutdownFunction();
 
             ~MarsHealth();
@@ -42,6 +44,7 @@ namespace function {
             bool loadConfig(const YAML::Node& yamlConfig);
             //路由
             std::shared_ptr<http::MarsHttpRouter> router;
+            //配置文件
             std::map<std::string, std::shared_ptr<MarsHealthConfig>> healthConfig;
         };
     }

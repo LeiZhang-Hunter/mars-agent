@@ -5,11 +5,13 @@
 #ifndef MARS_AGENT_MARSHTTPACTION_H
 #define MARS_AGENT_MARSHTTPACTION_H
 
+#include <functional>
+
 namespace function {
     namespace http {
         class MarsHttpAction {
         public:
-            std::string uses;
+            std::function<void(struct evhttp_request *request)> uses;
 
             std::string middleware;
         };
