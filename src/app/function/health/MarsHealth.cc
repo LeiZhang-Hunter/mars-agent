@@ -27,7 +27,6 @@ MarsHealth::MarsHealth(const std::shared_ptr<app::NodeAgent> &agent) {
 void MarsHealth::initFunction() {
     //循环配置文件
     for (auto it = healthConfig.begin(); it != healthConfig.end(); it++) {
-        std::shared_ptr<http::MarsHttpAction> action = std::make_shared<http::MarsHttpAction>();
     }
 }
 

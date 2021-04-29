@@ -9,8 +9,8 @@ namespace function {
         class MarsProcessHealth
         {
         public:
-            void handle(struct evhttp_request *request) {
-
+            std::string handle(struct evhttp_request *request) {
+                return "ok";
             }
         };
     }

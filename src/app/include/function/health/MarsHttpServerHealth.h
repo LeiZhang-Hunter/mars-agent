@@ -4,14 +4,16 @@
 
 #ifndef MARS_AGENT_MARSHTTPSERVERHEALTH_H
 #define MARS_AGENT_MARSHTTPSERVERHEALTH_H
-
+extern "C" {
+#include "evhttp.h"
+}
+#include <string>
 namespace function {
     namespace health {
         class MarsHttpServerHealth
         {
-            void handle(struct evhttp_request *request) {
-
-            }
+        public:
+            std::string handle(struct evhttp_request *request);
         };
     }
 }

@@ -4,16 +4,27 @@
 
 #ifndef MARS_AGENT_MARSHTTPACTION_H
 #define MARS_AGENT_MARSHTTPACTION_H
+extern "C" {
+#include "evhttp.h"
+}
 
 #include <functional>
+#include <string>
 
 namespace function {
     namespace http {
+        typedef  std::function<std::string(struct evhttp_request *request)> usesClosure;
         class MarsHttpAction {
         public:
-            std::function<void(struct evhttp_request *request)> uses;
 
             std::string middleware;
+
+            void setUsers(const usesClosure &callable) {
+                uses = callable;
+            }
+
+        private:
+            usesClosure uses;
         };
     }
 
