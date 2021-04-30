@@ -23,6 +23,10 @@ namespace function {
                 uses = callable;
             }
 
+            usesClosure getUsers() {
+                return uses;
+            }
+
         private:
             usesClosure uses;
         };

@@ -3,6 +3,7 @@
 //
 
 #include <vector>
+#include <iostream>
 
 #include "common/MarsStringTool.h"
 #include "function/http/MarsHttpRouter.h"
@@ -13,7 +14,7 @@
 using namespace function::http;
 
 MarsHttpRouter::MarsHttpRouter() {
-    groupAttributes = std::shared_ptr<MarsHttpAttributes>();
+    groupAttributes = std::make_shared<MarsHttpAttributes>();
     stringTool = std::shared_ptr<common::MarsStringTool>();
 }
 
@@ -89,11 +90,37 @@ MarsHttpRouter::addRoute(const std::vector<std::string> &method, const std::stri
     if (!groupAttributes->prefixStr.empty()) {
         urlPath += stringTool->trimString(groupAttributes->prefixStr, "/") + "/" + stringTool->trimString(urlPath, "/");
     }
+
+    addStaticRoute(method, uri, action);
     return shared_from_this();
 }
 
-bool MarsHttpRouter::dispatch() {
-    return true;
+void MarsHttpRouter::addStaticRoute(const std::vector<std::string> &methodVector, const std::string &uri,
+                    const std::shared_ptr<MarsHttpAction> &action) {
+    for (int i = 0; i < methodVector.size(); i++) {
+        std::string method = methodVector[i];
+        if (staticRoutes.find(method) == staticRoutes.end()) {
+            staticRoutes[method][uri] = action;
+            continue;
+        }
+
+        if (staticRoutes[method].find(uri) == staticRoutes[method].end()) {
+            staticRoutes[method][uri] = action;
+            continue;
+        }
+    }
+}
+
+
+std::shared_ptr<MarsHttpAction> MarsHttpRouter::dispatch(const std::string &method, const std::string& uri) {
+    if (staticRoutes.find(method) == staticRoutes.end()) {
+        return std::shared_ptr<MarsHttpAction>();
+    }
+
+    if (staticRoutes[method].find(uri) == staticRoutes[method].end()) {
+        return std::shared_ptr<MarsHttpAction>();
+    }
+    return staticRoutes[method][uri];
 }
 
 bool MarsHttpRouter::initDispatcher() {

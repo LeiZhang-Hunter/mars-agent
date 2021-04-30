@@ -53,12 +53,16 @@ namespace function {
             addRoute(const std::vector<std::string> &method, const std::string &uri,
                      const std::shared_ptr<MarsHttpAction> &action);
 
-            bool dispatch();
+            std::shared_ptr<MarsHttpAction> dispatch(const std::string &uri, const std::string& method);
 
             bool initDispatcher();
 
 
         private:
+
+            void addStaticRoute(const std::vector<std::string> &method, const std::string &uri,
+                                const std::shared_ptr<MarsHttpAction> &action);
+
             uint8_t identifier = 1;
 
             std::shared_ptr<MarsHttpAttributes> groupAttributes;
@@ -66,7 +70,7 @@ namespace function {
             std::shared_ptr<common::MarsStringTool> stringTool;
 
             //静态集合
-            std::unordered_set<std::string, std::unordered_set<std::string, std::shared_ptr<MarsHttpAction>>> staticRoutes;
+            std::map<std::string, std::map<std::string, std::shared_ptr<MarsHttpAction>>> staticRoutes;
         };
     }
 }

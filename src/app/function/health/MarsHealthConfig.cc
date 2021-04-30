@@ -41,7 +41,11 @@ void MarsHealthConfig::load (const YAML::Node& node) {
     if (node["health_ip"]) {
         health_ip = node["health_ip"].as<std::string>();
     }
-    std::shared_ptr<http::MarsHttpAction> action = std::make_shared<http::MarsHttpAction>();
+
+    if (node["http_path"]) {
+        http_path = node["http_path"].as<std::string>();
+    }
+    action = std::make_shared<http::MarsHttpAction>();
     if (health_way == "http") {
         std::shared_ptr<MarsHttpServerHealth> server = std::make_shared<MarsHttpServerHealth>();
         action->setUsers(std::bind(&MarsHttpServerHealth::handle, server, _1));

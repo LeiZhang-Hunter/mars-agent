@@ -3,6 +3,7 @@
 //
 extern "C" {
 #include "evhttp.h"
+#include "event2/http.h"
 }
 
 #include <cstring>
@@ -13,6 +14,7 @@ extern "C" {
 #include "config/MarsConfig.h"
 #include "function/http/MarsHttpRouter.h"
 #include "NodeAgent.h"
+#include "function/http/MarsHttpAction.h"
 
 using namespace function::http;
 
@@ -47,11 +49,44 @@ void MarsHttp::shutdownFunction() {
 
 }
 
+std::string MarsHttp::getHttpRequestType(short type) {
+    switch (type) {
+        case evhttp_cmd_type::EVHTTP_REQ_GET:
+            return "GET";
+        case evhttp_cmd_type::EVHTTP_REQ_POST:
+            return "POST";
+        case evhttp_cmd_type::EVHTTP_REQ_HEAD:
+            return "HEAD";
+        case evhttp_cmd_type::EVHTTP_REQ_PUT:
+            return "PUT";
+        case evhttp_cmd_type::EVHTTP_REQ_DELETE:
+            return "DELETE";
+        case evhttp_cmd_type::EVHTTP_REQ_OPTIONS:
+            return "OPTIONS";
+        case evhttp_cmd_type::EVHTTP_REQ_TRACE:
+            return "TRACE";
+        case evhttp_cmd_type::EVHTTP_REQ_CONNECT:
+            return "CONNECT";
+        case evhttp_cmd_type::EVHTTP_REQ_PATCH:
+            return "PATCH";
+    }
+    return "GET";
+}
+
 void MarsHttp::httpRequestHandle(struct evhttp_request *request, void *args) {
+    auto httpDispatcher = static_cast<MarsHttp *>(args);
+    if (!httpDispatcher) {
+        return;
+    }
+
+    if (!request) {
+        return;
+    }
+
+    std::shared_ptr<MarsHttpRouter> router = httpDispatcher->getRouter();
     const struct evhttp_uri *evhttp_uri = evhttp_request_get_evhttp_uri(request);
     char url[8192];
     evhttp_uri_join(const_cast<struct evhttp_uri *>(evhttp_uri), url, 8192);
-    std::cout << url << std::endl;
 
     struct evbuffer *evbuf = evbuffer_new();
     if (!evbuf) {
@@ -59,8 +94,25 @@ void MarsHttp::httpRequestHandle(struct evhttp_request *request, void *args) {
         return;
     }
 
-    evbuffer_add_printf(evbuf, "Server response. Your request url is %s", url);
-    evhttp_send_reply(request, HTTP_OK, "OK", evbuf);
+    //查找路由
+    std::shared_ptr<MarsHttpAction> action = router->dispatch(httpDispatcher->getHttpRequestType(request->type), url);
+    if (!action) {
+        evbuffer_add_printf(evbuf, "NOT FOUND %s", url);
+        evhttp_send_reply(request, HTTP_NOTFOUND, "OK", evbuf);
+        evbuffer_free(evbuf);
+        return;
+    }
+
+    std::function<std::string(struct evhttp_request *request)> handle = action->getUsers();
+    if (handle) {
+        std::string ret = handle(request);
+        evbuffer_add_printf(evbuf, ret.c_str(), url);
+        evhttp_send_reply(request, HTTP_OK, "OK", evbuf);
+        evbuffer_free(evbuf);
+        return;
+    }
+
+    evhttp_send_reply(request, HTTP_INTERNAL, "ERROR", evbuf);
     evbuffer_free(evbuf);
 }
 

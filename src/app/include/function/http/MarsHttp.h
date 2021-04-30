@@ -45,6 +45,9 @@ namespace function {
             }
 
         private:
+
+            std::string getHttpRequestType(short type);
+
             std::string httpIp;
             short httpPort;
             int httpTimeout;
