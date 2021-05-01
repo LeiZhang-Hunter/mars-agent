@@ -13,6 +13,10 @@
 #include "event/EventSignal.h"
 #include "os/UnixCommand.h"
 
+namespace OS {
+    class UnixThreadContainer;
+}
+
 namespace config {
     class MarsConfig;
 }
@@ -86,6 +90,7 @@ namespace app {
         std::shared_ptr<config::MarsConfig> marsConfig;
         std::vector<std::shared_ptr<app::AgentWorker>> workerPool;
         std::shared_ptr<module::MarsCoreModule> coreModule;
+        std::shared_ptr<OS::UnixThreadContainer> threadContainer;
     };
 }
 

@@ -18,6 +18,7 @@
 #include "os/UnixThreadProc.h"
 #include "os/UnixCountDownLatch.h"
 #include "Callable.h"
+#include "event/EventLoop.h"
 
 namespace Event {
     class Channel;

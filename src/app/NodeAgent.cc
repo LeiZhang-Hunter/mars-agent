@@ -10,6 +10,7 @@
 #include "function/container/MarsFunctionContainer.h"
 #include "function/http/MarsHttp.h"
 #include "module/MarsCoreModule.h"
+#include "os/UnixThreadContainer.h"
 
 using namespace std::placeholders;
 
@@ -23,6 +24,7 @@ app::NodeAgent::NodeAgent() {
     //初始化当前循环的信号处理
     loop->sigAdd(SIGTERM, dispatcherStopCommand, loop->getEventBase());
     signalEvent->bindEvent();
+    threadContainer = std::make_shared<OS::UnixThreadContainer>();
 }
 
 void app::NodeAgent::dispatcherStopCommand(evutil_socket_t sig, short events, void *param) {
@@ -58,19 +60,11 @@ void app::NodeAgent::run(int argc, char **argv) {
     coreModule = std::make_shared<module::MarsCoreModule>(shared_from_this());
     coreModule->moduleInit();
     unsigned short workerNumber = marsConfig->getWorkerNumber();
-    for (int i = 0; i < workerNumber; i++) {
-        //开启工作的线程池
-        std::shared_ptr<app::AgentWorker> worker = std::make_shared<AgentWorker>();
-        //加入线程池
-        workerPool.push_back((worker));
-        //设置线程初始化函数
-        Callable::initCallable initFunctionParam = std::bind(&NodeAgent::init, shared_from_this(), _1);
-        //启动工作事件
-        worker->Start();
-    }
+    threadContainer->setThreaderNumber(workerNumber);
 
+    threadContainer->start();
+    std::cout << "finish" << std::endl;
     //开启线程池
-    std::cout << "loop1" << std::endl;
     loop->loop();
 
     //销毁功能模块

@@ -15,6 +15,7 @@ extern "C" {
 #include "function/http/MarsHttpRouter.h"
 #include "NodeAgent.h"
 #include "function/http/MarsHttpAction.h"
+#include "function/http/MarsHttpResponse.h"
 
 using namespace function::http;
 
@@ -83,36 +84,31 @@ void MarsHttp::httpRequestHandle(struct evhttp_request *request, void *args) {
         return;
     }
 
+    //初始化路由
     std::shared_ptr<MarsHttpRouter> router = httpDispatcher->getRouter();
     const struct evhttp_uri *evhttp_uri = evhttp_request_get_evhttp_uri(request);
     char url[8192];
     evhttp_uri_join(const_cast<struct evhttp_uri *>(evhttp_uri), url, 8192);
 
-    struct evbuffer *evbuf = evbuffer_new();
-    if (!evbuf) {
-        printf("create evbuffer failed!\n");
-        return;
-    }
+    //初始化响应体
+    std::shared_ptr<MarsHttpResponse> response = std::make_shared<MarsHttpResponse>(request, url);
 
     //查找路由
     std::shared_ptr<MarsHttpAction> action = router->dispatch(httpDispatcher->getHttpRequestType(request->type), url);
     if (!action) {
-        evbuffer_add_printf(evbuf, "NOT FOUND %s", url);
-        evhttp_send_reply(request, HTTP_NOTFOUND, "OK", evbuf);
-        evbuffer_free(evbuf);
+        response->response(404, "");
         return;
     }
 
+
+    //获取要处理的函数
     std::function<std::string(struct evhttp_request *request)> handle = action->getUsers();
     if (handle) {
         std::string ret = handle(request);
-        evbuffer_add_printf(evbuf, ret.c_str(), url);
-        evhttp_send_reply(request, HTTP_OK, "OK", evbuf);
-        evbuffer_free(evbuf);
+        response->response(HTTP_OK, ret);
         return;
     }
 
-    evhttp_send_reply(request, HTTP_INTERNAL, "ERROR", evbuf);
-    evbuffer_free(evbuf);
+    response->response(HTTP_INTERNAL, "");
 }
 
