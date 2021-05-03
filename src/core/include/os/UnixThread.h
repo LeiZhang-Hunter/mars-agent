@@ -19,15 +19,17 @@
 #include "os/UnixCountDownLatch.h"
 #include "Callable.h"
 #include "event/EventLoop.h"
+#include "os/UnixCurrentThread.h"
 
 namespace Event {
     class Channel;
+    class EventQueue;
 }
 
 namespace OS {
 
 
-    class UnixThread {
+class UnixThread : public std::enable_shared_from_this<UnixThread>{
     public:
         //构造函数
         UnixThread();
@@ -71,7 +73,7 @@ namespace OS {
         }
 
         //获取线程的tid
-        size_t  getPid() {
+        size_t  getTid() {
             return mThreadID;
         }
 
@@ -79,6 +81,11 @@ namespace OS {
         std::shared_ptr<Event::EventLoop> getEventLoop() {
             return loop;
         }
+
+    /**
+     * 事件唤醒
+     */
+    void wakeUp();
 
     private:
 
@@ -90,6 +97,11 @@ namespace OS {
          * @return
          */
         static void* ThreadProc(void* arg);
+
+        /**
+         * 有序触发任务队列
+         */
+        void OnTask();
 
         /**
          * 互斥锁
@@ -140,6 +152,8 @@ namespace OS {
 
         //线程的处理程序
         UnixThreadProc *proc;
+
+        std::shared_ptr<Event::EventQueue> queue;
 
         //线程id
         pid_t tid;

@@ -63,7 +63,6 @@ void app::NodeAgent::run(int argc, char **argv) {
     threadContainer->setThreaderNumber(workerNumber);
 
     threadContainer->start();
-    std::cout << "finish" << std::endl;
     //开启线程池
     loop->loop();
 

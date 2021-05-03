@@ -4,6 +4,7 @@
 
 #include <sys/eventfd.h>
 
+#include "event/EventQueue.h"
 #include "event/EventLoop.h"
 #include "os/UnixThread.h"
 #include "event/Channel.h"
@@ -22,10 +23,11 @@ OS::UnixThread::UnixThread() {
     int channelFd = createChannelFd();
     if (channelFd != -1) {
         channel = std::make_shared<Event::Channel>(loop, channelFd);
-        //channel->setOnReadCallable();
+        channel->setOnReadCallable(std::move(std::bind(&UnixThread::OnTask, shared_from_this())));
         //开启读取事件
         channel->enableReading(3);
     }
+    queue = std::make_shared<Event::EventQueue>(shared_from_this());
 }
 
 int OS::UnixThread::createChannelFd() {
@@ -90,10 +92,21 @@ bool OS::UnixThread::Start() {
 
     //等待所有线程初始化完成工作
     latch->wait();
+
+    //创建线程之间通讯的channel
+
     tid = proc->getThreadTid();
     /*
      *释放属性
      */
     pthread_attr_destroy(&attr);
     return mRunStatus;
+}
+
+void OS::UnixThread::OnTask() {
+
+}
+
+void OS::UnixThread::wakeUp() {
+
 }

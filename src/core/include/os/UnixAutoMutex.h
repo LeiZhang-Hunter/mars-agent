@@ -8,7 +8,7 @@
 namespace OS {
     class UnixAutoMutex {
     public:
-        UnixAutoMutex(UnixMutex &mutex_) :mutexVar(mutex_){
+        UnixAutoMutex(UnixMutex *mutex_) : mutexVar(mutex_){
             mutexVar.lock();
         }
 
