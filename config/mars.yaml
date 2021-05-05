@@ -1,5 +1,5 @@
 mars:
-  worker_number: 8
+  worker_number: 4
   pid_file: /data/www-data/yaml.pid
   #mars的核心功能健康检查
   core:

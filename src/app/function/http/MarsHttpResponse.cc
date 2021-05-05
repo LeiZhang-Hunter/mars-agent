@@ -12,13 +12,18 @@ MarsHttpResponse::MarsHttpResponse(struct evhttp_request *requestData, const cha
     request = requestData;
     httpBuffer = evbuffer_new();
     httpUri = uri;
+    output_headers = evhttp_request_get_output_headers(request);
+}
+
+bool MarsHttpResponse::header(const std::string& key, const std::string& value) {
+    evhttp_add_header(output_headers, key.c_str(), value.c_str());
+    return true;
 }
 
 bool MarsHttpResponse::response(short code, const std::string& message) {
     if (!httpBuffer) {
         return false;
     }
-
     evbuffer_add_printf(httpBuffer, message.c_str(), httpUri);
     evhttp_send_reply(request, code, message.c_str(), httpBuffer);
     return true;

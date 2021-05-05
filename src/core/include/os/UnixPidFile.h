@@ -17,9 +17,7 @@ namespace OS {
      */
     class UnixPidFile : public Noncopyable {
     public:
-        UnixPidFile() {
-            pid = getpid();
-        };
+        UnixPidFile() {};
 
         /**
          * 锁住文件
@@ -48,6 +46,10 @@ namespace OS {
         pid_t setPid();
 
         pid_t getPid();
+
+        bool close();
+
+        bool closeFd(int fd);
 
     private:
         //文件锁

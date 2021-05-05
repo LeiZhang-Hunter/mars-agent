@@ -4,14 +4,24 @@
 
 #ifndef MARS_AGENT_MARSPROCESSHEALTH_H
 #define MARS_AGENT_MARSPROCESSHEALTH_H
+
+#include "os/UnixCurrentThread.h"
+#include "function/http/MarsHttpResponse.h"
+
+namespace OS {
+    class UnixPidFile;
+}
+
 namespace function {
     namespace health {
-        class MarsProcessHealth
-        {
+        class MarsProcessHealth {
         public:
-            std::string handle(struct evhttp_request *request) {
-                return "ok";
-            }
+            MarsProcessHealth(const std::string& pid_file);
+            void handle(struct evhttp_request *request, const std::shared_ptr<function::http::MarsHttpResponse>& response);
+
+        private:
+            std::string processPidFile;
+            std::shared_ptr<OS::UnixPidFile> pidFileObject;
         };
     }
 }

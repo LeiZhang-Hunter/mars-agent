@@ -26,11 +26,15 @@ namespace function {
     namespace http {
         class MarsHttpRouter;
 
-        class MarsHttp : public function::MarsFunctionObject{
+        class MarsHttp : public function::MarsFunctionObject,
+                         public std::enable_shared_from_this<MarsHttp> {
         public:
+
             MarsHttp(const std::shared_ptr<app::NodeAgent> &agent);
 
             void initFunction();
+
+            void httpThreadInit(const std::shared_ptr<Event::EventLoop> &threadLoop);
 
             void shutdownFunction();
 
@@ -40,7 +44,14 @@ namespace function {
 
             static void httpRequestHandle(struct evhttp_request *, void *);
 
-            ~MarsHttp() {
+            std::shared_ptr<app::NodeAgent> getMainAgent() {
+                return nodeAgent;
+            }
+
+
+            ~
+
+            MarsHttp() {
 
             }
 
@@ -48,15 +59,18 @@ namespace function {
 
             std::string getHttpRequestType(short type);
 
+            int createHttpServerSocket();
+
             std::string httpIp;
             short httpPort;
             int httpTimeout;
             std::shared_ptr<Event::EventLoop> bindLoop;
             //http的基础事例
-            struct evhttp *httpBase;
             //路由
             std::shared_ptr<MarsHttpRouter> routerHandle;
             std::shared_ptr<app::NodeAgent> nodeAgent;
+            int httpServerSocket = 0;
+
         };
     }
 }

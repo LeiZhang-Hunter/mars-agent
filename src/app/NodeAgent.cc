@@ -66,6 +66,7 @@ void app::NodeAgent::run(int argc, char **argv) {
     //开启线程池
     loop->loop();
 
+
     //销毁功能模块
     coreModule->moduleDestroy();
 }

@@ -2,6 +2,8 @@
 // Created by zhanglei on 2021/4/5.
 //
 
+#include <iostream>
+#include <zconf.h>
 #include "event/Channel.h"
 #include "event/EventLoop.h"
 
@@ -19,26 +21,33 @@ bool Event::EventLoop::updateChannel(const std::shared_ptr<Channel> &channel) {
 }
 
 void Event::EventLoop::onEvent(evutil_socket_t fd, short events, void * args) {
+
     //管道不能是空的
     if (!args)
         return;
 
+    char buf[100];
+    read(fd, buf, sizeof(buf));
     //管道事件触发
     auto channel = static_cast<Channel *>(args);
-    channel->setEvents(events);
+//    channel->setEvents(events);
     channel->handelEvent();
 }
 
 bool Event::EventLoop::eventSet(const std::shared_ptr<Channel>& channel) {
-
+    std::cout << "eventSet" << std::endl;
     //
     struct event* eventFd = event_new(base, channel->getChannelFd(), channel->getEvents(), onEvent,
                                       static_cast<void *>(channel.get()));
-
-    struct timeval time;
-    time.tv_sec = channel->getTimer().tv_sec;
-    time.tv_usec = channel->getTimer().tv_usec;
-    int ret = event_add(eventFd, &time);
+    int ret = 0;
+    if (channel->getTimer().tv_usec > 0) {
+        struct timeval time;
+        time.tv_sec = channel->getTimer().tv_sec;
+        time.tv_usec = channel->getTimer().tv_usec;
+        ret = event_add(eventFd, &time);
+    } else {
+        ret = event_add(eventFd, nullptr);
+    }
     return !ret;
 }
 
@@ -56,7 +65,7 @@ void Event::EventLoop::loop() {
     }
     //循环、分发事件
     int ret = event_base_dispatch(base);
-
+    std::cout << "finish loop:" << ret << std::endl;
     if (ret == 1) {
     }
 }

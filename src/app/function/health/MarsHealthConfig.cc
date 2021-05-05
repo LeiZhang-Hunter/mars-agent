@@ -9,7 +9,7 @@ extern "C" {
 #include "health/MarsProcessHealth.h"
 #include "health/MarsHttpServerHealth.h"
 #include "http/MarsHttpAction.h"
-
+#include "http/MarsHttpResponse.h"
 using namespace function::health;
 using namespace std::placeholders;
 
@@ -48,9 +48,9 @@ void MarsHealthConfig::load (const YAML::Node& node) {
     action = std::make_shared<http::MarsHttpAction>();
     if (health_way == "http") {
         std::shared_ptr<MarsHttpServerHealth> server = std::make_shared<MarsHttpServerHealth>();
-        action->setUsers(std::bind(&MarsHttpServerHealth::handle, server, _1));
+        action->setUsers(std::bind(&MarsHttpServerHealth::handle, server, _1, _2));
     } else {
-        std::shared_ptr<MarsProcessHealth> server = std::make_shared<MarsProcessHealth>();
-        action->setUsers(std::bind(&MarsProcessHealth::handle, server, _1));
+        std::shared_ptr<MarsProcessHealth> server = std::make_shared<MarsProcessHealth>(health_path);
+        action->setUsers(std::bind(&MarsProcessHealth::handle, server, _1, _2));
     }
 }

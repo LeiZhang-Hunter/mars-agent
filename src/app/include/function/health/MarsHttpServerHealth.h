@@ -7,13 +7,17 @@
 extern "C" {
 #include "evhttp.h"
 }
+
 #include <string>
+#include <memory>
+#include "function/health/MarsProcessHealth.h"
+#include "function/http/MarsHttpResponse.h"
 namespace function {
     namespace health {
-        class MarsHttpServerHealth
-        {
+
+        class MarsHttpServerHealth {
         public:
-            std::string handle(struct evhttp_request *request);
+            void handle(struct evhttp_request *request, const std::shared_ptr<function::http::MarsHttpResponse>& response);
         };
     }
 }

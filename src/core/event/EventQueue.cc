@@ -4,7 +4,6 @@
 
 #include <memory>
 
-#include "os/UnixMutex.h"
 #include "os/UnixAutoMutex.h"
 #include "event/EventQueue.h"
 #include "os/UnixThread.h"
@@ -16,9 +15,9 @@ Event::EventQueue::EventQueue(const std::shared_ptr<OS::UnixThread>& threadObjec
 
 void Event::EventQueue::dispatchTask() {
     //交换地址
-    std::queue<Task> mainTaskQueue;
+    std::queue<Callable::Task> mainTaskQueue;
     {
-        OS::UnixAutoMutex guard(&mMutex);
+        OS::UnixAutoMutex guard(mMutex);
         mainTaskQueue.swap(taskQueue);
     }
 
@@ -30,18 +29,13 @@ void Event::EventQueue::dispatchTask() {
     }
 }
 
-void Event::EventQueue::pushTask(const Task &task) {
-    if (OS::UnixCurrentThread::tid() == thread->getTid())
+void Event::EventQueue::pushTask(const Callable::Task &task) {
     {
-        task();
-    } else {
-        {
-            OS::UnixAutoMutex guard(&mMutex);
-            taskQueue.push(task);
-        }
-
-        //唤醒线程
-        thread->wakeUp();
+        OS::UnixAutoMutex guard(mMutex);
+        taskQueue.push(task);
     }
+
+    //唤醒线程
+    thread->wakeUp();
 
 }

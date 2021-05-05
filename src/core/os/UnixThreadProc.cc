@@ -19,7 +19,6 @@ void OS::UnixThreadProc::runThread() {
     if (threadInitCallable) {
         threadInitCallable(loop);
     }
-    std::cout << "loop" << std::endl;
 
     //完成初始化通知主线程继续运行
     latch->down();
@@ -27,6 +26,5 @@ void OS::UnixThreadProc::runThread() {
 
     //进行事件循环
     loop->loop();
-    std::cout << "thread " << "1" << " end" << std::endl;
 
 }

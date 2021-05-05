@@ -5,6 +5,9 @@
 
 
 using namespace function::health;
-std::string MarsHttpServerHealth::handle(struct evhttp_request *request) {
 
+void MarsHttpServerHealth::handle(struct evhttp_request *request,
+                                  const std::shared_ptr<function::http::MarsHttpResponse> &response) {
+//    return "MarsHttpServerHealth";
+    return;
 }

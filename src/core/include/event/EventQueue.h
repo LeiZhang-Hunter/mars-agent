@@ -11,6 +11,7 @@
 
 #include "os/UnixMutex.h"
 #include "Noncopyable.h"
+#include "Callable.h"
 
 namespace OS {
     class UnixMutex;
@@ -23,9 +24,8 @@ class EventQueue :public Noncopyable, public std::enable_shared_from_this<EventQ
 
         EventQueue(const std::shared_ptr<OS::UnixThread>& threadObject);
 
-        typedef std::function<void ()> Task;
 
-        void pushTask(const Task& task);
+        void pushTask(const Callable::Task& task);
 
         void dispatchTask();
 
@@ -33,7 +33,7 @@ class EventQueue :public Noncopyable, public std::enable_shared_from_this<EventQ
 
         }
     private:
-        std::queue<Task> taskQueue;
+        std::queue<Callable::Task> taskQueue;
 
         /**
          * 互斥锁

@@ -19,12 +19,16 @@ namespace OS {
         UnixThreadContainer();
 
         void setThreaderNumber(int number) {
-            threadNumber = number;
+            if (number > 0) {
+                threadNumber = number;
+            }
         }
 
         void setThreadInitCallable(const Callable::initCallable& callable) {
             initClosure = callable;
         }
+
+        void task(const Callable::Task& task);
 
         void start();
 

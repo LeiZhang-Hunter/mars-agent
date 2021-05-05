@@ -17,6 +17,8 @@ namespace function {
 
             bool response(short code, const std::string& response);
 
+            bool header(const std::string& key, const std::string& value);
+
             ~MarsHttpResponse();
 
         private:
@@ -25,6 +27,9 @@ namespace function {
             struct evbuffer *httpBuffer;
 
             const char* httpUri;
+
+            //http响应头
+            struct evkeyvalq *output_headers;
         };
     }
 }

@@ -23,13 +23,14 @@
 
 namespace Event {
     class Channel;
+
     class EventQueue;
 }
 
 namespace OS {
 
 
-class UnixThread : public std::enable_shared_from_this<UnixThread>{
+    class UnixThread : public std::enable_shared_from_this<UnixThread> {
     public:
         //构造函数
         UnixThread();
@@ -47,6 +48,8 @@ class UnixThread : public std::enable_shared_from_this<UnixThread>{
             mTerminated = true;
             mMutex.unlock();
         }
+
+        void addTask(const Callable::Task& task);
 
         //恢复线程
         void Resume() {
@@ -67,13 +70,12 @@ class UnixThread : public std::enable_shared_from_this<UnixThread>{
         }
 
         //设置初始化函数
-        void setInitCallable(const Callable::initCallable& callable)
-        {
+        void setInitCallable(const Callable::initCallable &callable) {
             proc->setInitCallable(callable);
         }
 
         //获取线程的tid
-        size_t  getTid() {
+        size_t getTid() {
             return mThreadID;
         }
 
@@ -82,10 +84,10 @@ class UnixThread : public std::enable_shared_from_this<UnixThread>{
             return loop;
         }
 
-    /**
-     * 事件唤醒
-     */
-    void wakeUp();
+        /**
+         * 事件唤醒
+         */
+        void wakeUp();
 
     private:
 
@@ -96,7 +98,7 @@ class UnixThread : public std::enable_shared_from_this<UnixThread>{
          * @param arg
          * @return
          */
-        static void* ThreadProc(void* arg);
+        static void *ThreadProc(void *arg);
 
         /**
          * 有序触发任务队列
@@ -153,10 +155,14 @@ class UnixThread : public std::enable_shared_from_this<UnixThread>{
         //线程的处理程序
         UnixThreadProc *proc;
 
+        //消息队列
         std::shared_ptr<Event::EventQueue> queue;
 
         //线程id
         pid_t tid;
+
+        //管道的fd
+        int wakeupChannelFd;
     };
 }
 

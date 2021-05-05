@@ -70,6 +70,10 @@ namespace app {
          */
         void stop();
 
+        void test() {
+            std::cout << "test" << std::endl;
+        }
+
         /**
          * 运行
          */
@@ -83,12 +87,15 @@ namespace app {
             return coreModule;
         }
 
+        std::shared_ptr<OS::UnixThreadContainer> getUnixThreadContainer() {
+            return threadContainer;
+        }
+
     private:
         std::shared_ptr<Event::EventLoop> loop;
         std::shared_ptr<Event::EventSignal> signalEvent;
         std::shared_ptr<NodeAgentCommand> command;
         std::shared_ptr<config::MarsConfig> marsConfig;
-        std::vector<std::shared_ptr<app::AgentWorker>> workerPool;
         std::shared_ptr<module::MarsCoreModule> coreModule;
         std::shared_ptr<OS::UnixThreadContainer> threadContainer;
     };

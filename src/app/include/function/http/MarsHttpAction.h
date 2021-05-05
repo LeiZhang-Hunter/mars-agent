@@ -8,12 +8,17 @@ extern "C" {
 #include "evhttp.h"
 }
 
+#include <memory>
 #include <functional>
 #include <string>
+#include "http/MarsHttpResponse.h"
 
 namespace function {
     namespace http {
-        typedef  std::function<std::string(struct evhttp_request *request)> usesClosure;
+
+        typedef std::function<void(struct evhttp_request *request,
+                                   const std::shared_ptr<MarsHttpResponse> &response)> usesClosure;
+
         class MarsHttpAction {
         public:
 

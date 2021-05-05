@@ -6,11 +6,14 @@
 #define MARS_AGENT_UNIXCURRENTTHREAD_H
 
 #include <unistd.h>
+#include <sys/syscall.h>
 
 namespace OS {
 
     namespace UnixCurrentThread {
         extern __thread int t_cachedTid;
+
+        void cacheTid();
 
         inline int tid()
         {

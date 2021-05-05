@@ -39,6 +39,7 @@ pid_t OS::UnixPidFile::getPid() {
     //持久化pid进程文件锁
     char buf[64];
     size_t res = read(pidFd, &buf, sizeof(buf));
+
     if (res == -1) {
         std::cerr << strerror(errno) << std::endl;
         exit(-1);
@@ -49,7 +50,7 @@ pid_t OS::UnixPidFile::getPid() {
 
 pid_t OS::UnixPidFile::setPid() {
     std::stringstream pidStr;
-
+    pid = getpid();
     pidStr << pid;
     lseek(pidFd, 0, SEEK_SET);
     ftruncate(pidFd, 0);
@@ -63,4 +64,19 @@ pid_t OS::UnixPidFile::setPid() {
     }
 
     return pid;
+}
+
+bool OS::UnixPidFile::close() {
+    if (pidFd > 0) {
+        ::close(pidFd);
+    }
+    pidFd = 0;
+    return true;
+}
+
+bool OS::UnixPidFile::closeFd(int fd) {
+    if (fd > 0) {
+        ::close(fd);
+    }
+    return true;
 }
