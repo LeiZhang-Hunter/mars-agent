@@ -21,7 +21,6 @@ namespace function {
 
         private:
             std::string processPidFile;
-            std::shared_ptr<OS::UnixPidFile> pidFileObject;
         };
     }
 }

@@ -23,7 +23,7 @@ MarsProcessHealth::MarsProcessHealth(const std::string& pid_file) {
 
 void MarsProcessHealth::handle(struct evhttp_request *request,
                                const std::shared_ptr<function::http::MarsHttpResponse> &response) {
-    pidFileObject = std::make_shared<OS::UnixPidFile>();
+    std::shared_ptr<OS::UnixPidFile> pidFileObject = std::make_shared<OS::UnixPidFile>();
     response->header("Content-Type", "application/json;charset=utf-8");
     int ret = access(processPidFile.c_str(), F_OK);
     if (ret != 0) {
@@ -33,8 +33,16 @@ void MarsProcessHealth::handle(struct evhttp_request *request,
 
     int fd = pidFileObject->open(processPidFile, O_RDONLY);
 
-    pid_t processId = pidFileObject->getPid();
+    if (fd <= 0) {
+        response->response(200, "{\"status\":\"DOWN\"}");
+        return;
+    }
 
+    pid_t processId = pidFileObject->getPid();
+    if (processId <= 0) {
+        response->response(200, "{\"status\":\"DOWN\"}");
+        return;
+    }
     ret = kill(processId, 0);
     pidFileObject->closeFd(fd);
     if (ret == 0) {

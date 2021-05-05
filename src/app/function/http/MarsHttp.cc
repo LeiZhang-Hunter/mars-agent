@@ -143,7 +143,6 @@ void MarsHttp::httpRequestHandle(struct evhttp_request *request, void *args) {
     http::usesClosure handle = action->getUsers();
     if (handle) {
         handle(request, response);
-//        httpDispatcher->getMainAgent()->getUnixThreadContainer()->task(std::move(std::bind(handle, request, response)));
         return;
     }
 

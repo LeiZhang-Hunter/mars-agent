@@ -30,12 +30,17 @@ void Event::EventQueue::dispatchTask() {
 }
 
 void Event::EventQueue::pushTask(const Callable::Task &task) {
+    if (OS::UnixCurrentThread::tid() == thread->getTid())
     {
-        OS::UnixAutoMutex guard(mMutex);
-        taskQueue.push(task);
-    }
+        task();
+    } else {
+        {
+            OS::UnixAutoMutex guard(mMutex);
+            taskQueue.push(task);
+        }
 
-    //唤醒线程
-    thread->wakeUp();
+        //唤醒线程
+        thread->wakeUp();
+    }
 
 }

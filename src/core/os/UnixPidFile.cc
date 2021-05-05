@@ -32,7 +32,7 @@ bool OS::UnixPidFile::tryWriteLock() {
 }
 
 pid_t OS::UnixPidFile::getPid() {
-    if (pidFd == -1) {
+    if (pidFd <= 0) {
         return 0;
     }
 
