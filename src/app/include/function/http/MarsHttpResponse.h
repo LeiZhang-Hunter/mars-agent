@@ -17,7 +17,7 @@ namespace function {
 
             bool response(short code, const std::string& response);
 
-            bool header(const std::string& key, const std::string& value);
+            bool header(const std::string &key, const std::string &value);
 
             ~MarsHttpResponse();
 
@@ -30,6 +30,7 @@ namespace function {
 
             //http响应头
             struct evkeyvalq *output_headers;
+
         };
     }
 }

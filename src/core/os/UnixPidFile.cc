@@ -13,7 +13,7 @@ int OS::UnixPidFile::open(const std::string &pidFile, int flag) {
     pidFd = ::open(pidFile.c_str(), flag, 0664);
     if (pidFd == -1) {
         std::cerr << "pid file(" << pidFile << ") error:" << strerror(errno) << std::endl;
-        exit(-1);
+//        exit(-1);
     }
 
     return pidFd;
@@ -41,8 +41,8 @@ pid_t OS::UnixPidFile::getPid() {
     size_t res = read(pidFd, &buf, sizeof(buf));
 
     if (res == -1) {
-        std::cerr << strerror(errno) << std::endl;
-        exit(-1);
+        std::cerr << pidFd << ":" << strerror(errno) << std::endl;
+        return 0;
     }
     pid_t  process_pid = atoi(buf);
     return process_pid;
@@ -78,5 +78,6 @@ bool OS::UnixPidFile::closeFd(int fd) {
     if (fd > 0) {
         ::close(fd);
     }
+    pidFd = 0;
     return true;
 }

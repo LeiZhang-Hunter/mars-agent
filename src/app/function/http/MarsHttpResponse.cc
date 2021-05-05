@@ -16,7 +16,6 @@ MarsHttpResponse::MarsHttpResponse(struct evhttp_request *requestData, const cha
 }
 
 bool MarsHttpResponse::header(const std::string& key, const std::string& value) {
-    evhttp_add_header(output_headers, key.c_str(), value.c_str());
     return true;
 }
 
