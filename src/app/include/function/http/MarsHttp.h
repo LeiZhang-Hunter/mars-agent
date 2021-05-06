@@ -7,6 +7,7 @@
 
 #include <string>
 #include <memory>
+#include <unordered_set>
 
 #include "MarsFunctionObject.h"
 
@@ -49,17 +50,12 @@ namespace function {
             }
 
 
-            ~
-
-            MarsHttp() {
-
+            ~MarsHttp() {
             }
 
         private:
 
             std::string getHttpRequestType(short type);
-
-            int createHttpServerSocket();
 
             std::string httpIp;
             short httpPort;
@@ -69,8 +65,7 @@ namespace function {
             //路由
             std::shared_ptr<MarsHttpRouter> routerHandle;
             std::shared_ptr<app::NodeAgent> nodeAgent;
-            int httpServerSocket = 0;
-
+            struct evhttp *httpBase;
         };
     }
 }

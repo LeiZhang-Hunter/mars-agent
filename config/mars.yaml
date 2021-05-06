@@ -18,9 +18,11 @@ mars:
         health_enable: true
       - app: ugcaudit-nweb-api
         health_way: http
-        health_port: 10000
+        health_port: 80
         health_ip: 0.0.0.0
-        health_path: /health
+        health_path: /rig/health.php
+        health_host: 0.0.0.0
+        health_timeout: 7000
         http_path: /health/ugcaudit-nweb-api
         health_enable: true
     #普罗米修斯数据监测

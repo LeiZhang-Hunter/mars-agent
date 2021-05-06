@@ -2,10 +2,11 @@
 // Created by zhanglei on 2021/4/23.
 //
 extern "C" {
-#include "evhttp.h"
-#include "event2/http.h"
 #include <unistd.h>
 #include <sys/syscall.h>
+#include "evhttp.h"
+#include "event2/http.h"
+#include "event2/listener.h"
 }
 
 #include <cstring>
@@ -14,13 +15,17 @@ extern "C" {
 #include <arpa/inet.h>
 #include <zconf.h>
 
-#include "function/http/MarsHttp.h"
-#include "config/MarsConfig.h"
-#include "function/http/MarsHttpRouter.h"
 #include "NodeAgent.h"
-#include "function/http/MarsHttpAction.h"
-#include "function/http/MarsHttpResponse.h"
+#include "config/MarsConfig.h"
 #include "os/UnixThreadContainer.h"
+#include "os/UnixThread.h"
+#include "event/Channel.h"
+
+#include "http/MarsHttp.h"
+#include "http/MarsHttpRouter.h"
+#include "http/MarsHttpAction.h"
+#include "http/MarsHttpResponse.h"
+#include "http/MarsHttpResponse.h"
 
 using namespace function::http;
 using namespace std::placeholders;
@@ -33,55 +38,35 @@ MarsHttp::MarsHttp(const std::shared_ptr<app::NodeAgent> &agent) {
     routerHandle = std::make_shared<MarsHttpRouter>();
     nodeAgent = agent;
     httpTimeout = marsConfig->getHttpTimeout();
-    httpServerSocket = createHttpServerSocket();
 }
 
-int MarsHttp::createHttpServerSocket() {
-    int ret, server_socket, opt = 1;
-    server_socket = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);//NOTE 多线程evhttp必须非阻塞
-    if (server_socket < 0) {
-        std::cerr << "ERROR get socket: " << server_socket << "\n" << std::endl;
-        exit(-1);
-    }
 
-    setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = inet_addr(httpIp.c_str());;
-    addr.sin_port = htons(httpPort);
-    ret = bind(server_socket, (struct sockaddr *) &addr, sizeof(struct sockaddr));
-    if (ret < 0) {
-        std::cerr << "ERROR bind socket: " << server_socket << "\n" << std::endl;
-        exit(-1);
-    }
 
-    listen(server_socket, 65535);
-    return server_socket;
-}
+
 
 void MarsHttp::initFunction() {
-    nodeAgent->getUnixThreadContainer()->setThreadInitCallable(
-            std::bind(&MarsHttp::httpThreadInit, shared_from_this(), _1));
+    int ret;
+    struct evconnlistener *listener;
+
+    httpBase = evhttp_new(bindLoop->getEventBase());
+    struct evhttp_bound_socket *bound = evhttp_bind_socket_with_handle(httpBase, httpIp.c_str(), httpPort);
+
+    if (!bound) {
+        std::cerr << ("Error evhttp_accept_socket\n") << std::endl;
+        exit(-1);
+    }
+
+    listener = evhttp_bound_socket_get_listener(bound);
+
+//    设置请求超时时间(s)
+    evhttp_set_timeout(httpBase, httpTimeout);
+
+//    设置处理函数
+    evhttp_set_gencb(httpBase, httpRequestHandle, this);
 }
 
 void MarsHttp::httpThreadInit(const std::shared_ptr<Event::EventLoop> &threadLoop) {
-    struct event_base *base = event_base_new();
-    struct evhttp *httpBase;
-    int ret;
 
-    httpBase = evhttp_new(threadLoop->getEventBase());
-    ret = evhttp_accept_socket(httpBase, httpServerSocket);
-    std::cout << "ret:" << ret << std::endl;
-
-    if (ret!=0)
-        std::cerr << ("Error evhttp_accept_socket\n") << std::endl;
-
-    //设置请求超时时间(s)
-    evhttp_set_timeout(httpBase, httpTimeout);
-
-    //设置处理函数
-    evhttp_set_gencb(httpBase, httpRequestHandle, this);
 }
 
 void MarsHttp::shutdownFunction() {

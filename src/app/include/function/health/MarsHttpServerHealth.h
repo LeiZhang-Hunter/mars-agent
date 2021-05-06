@@ -12,12 +12,23 @@ extern "C" {
 #include <memory>
 #include "function/health/MarsProcessHealth.h"
 #include "function/http/MarsHttpResponse.h"
+
 namespace function {
     namespace health {
 
         class MarsHttpServerHealth {
         public:
-            void handle(struct evhttp_request *request, const std::shared_ptr<function::http::MarsHttpResponse>& response);
+            MarsHttpServerHealth(const std::string& ip, short health_port,
+                    const std::string& health_path, const std::string& health_host, unsigned int health_timeout);
+            void
+            handle(struct evhttp_request *request, const std::shared_ptr<function::http::MarsHttpResponse> &response);
+
+        private:
+            std::string destHttpDomain;
+            short destHttpPort;
+            std::string destHttpPath;
+            std::string destHealthHost;
+            unsigned int destHttpTimeout = 0;
         };
     }
 }

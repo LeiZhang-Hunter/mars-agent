@@ -22,6 +22,8 @@ namespace function {
             short health_port = 9000;
             std::string health_ip = "0.0.0.0";
             std::string http_path = "/health";
+            std::string health_host = "0.0.0.0";
+            unsigned int health_timeout = 0;
 
             //处理句柄
             std::shared_ptr<http::MarsHttpAction> action;

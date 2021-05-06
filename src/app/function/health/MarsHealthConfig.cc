@@ -10,6 +10,7 @@ extern "C" {
 #include "health/MarsHttpServerHealth.h"
 #include "http/MarsHttpAction.h"
 #include "http/MarsHttpResponse.h"
+
 using namespace function::health;
 using namespace std::placeholders;
 
@@ -17,7 +18,7 @@ using namespace std::placeholders;
  * 一次性重载配置
  * @param node
  */
-void MarsHealthConfig::load (const YAML::Node& node) {
+void MarsHealthConfig::load(const YAML::Node &node) {
     if (node["app"]) {
         app = node["app"].as<std::string>();
     }
@@ -45,9 +46,19 @@ void MarsHealthConfig::load (const YAML::Node& node) {
     if (node["http_path"]) {
         http_path = node["http_path"].as<std::string>();
     }
+
+    if (node["health_host"]) {
+        health_host = node["health_host"].as<std::string>();
+    }
+
+    if (node["health_timeout"]) {
+        health_timeout = node["health_timeout"].as<unsigned int>();
+    }
     action = std::make_shared<http::MarsHttpAction>();
     if (health_way == "http") {
-        std::shared_ptr<MarsHttpServerHealth> server = std::make_shared<MarsHttpServerHealth>();
+        std::shared_ptr<MarsHttpServerHealth> server = std::make_shared<MarsHttpServerHealth>(health_ip, health_port,
+                                                                                              health_path, health_host,
+                                                                                              health_timeout);
         action->setUsers(std::bind(&MarsHttpServerHealth::handle, server, _1, _2));
     } else {
         std::shared_ptr<MarsProcessHealth> server = std::make_shared<MarsProcessHealth>(health_path);

@@ -10,12 +10,17 @@ OS::UnixThreadContainer::UnixThreadContainer() {
 }
 
 void OS::UnixThreadContainer::task(const Callable::Task& task) {
+
+    getRandThread()->addTask(task);
+}
+
+std::shared_ptr<OS::UnixThread> OS::UnixThreadContainer::getRandThread() {
     int dispatcherIndex = taskDispatcherCount % threadNumber;
     if (!threadNumber) {
-        return;
+        return std::shared_ptr<OS::UnixThread>();
     }
-    threadDispatcherManager[dispatcherIndex]->addTask(task);
     taskDispatcherCount++;
+    return threadDispatcherManager[dispatcherIndex];
 }
 
 void OS::UnixThreadContainer::start() {

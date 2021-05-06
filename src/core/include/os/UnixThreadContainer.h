@@ -34,6 +34,8 @@ namespace OS {
 
         void stop();
 
+        std::shared_ptr<UnixThread> getRandThread();
+
         //检查线程是否已经注册
         ~UnixThreadContainer();
 
