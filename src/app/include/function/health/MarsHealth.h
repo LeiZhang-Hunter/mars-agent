@@ -46,6 +46,8 @@ namespace function {
             std::shared_ptr<http::MarsHttpRouter> router;
             //配置文件
             std::map<std::string, std::shared_ptr<MarsHealthConfig>> healthConfig;
+
+            bool isInit = false;
         };
     }
 }

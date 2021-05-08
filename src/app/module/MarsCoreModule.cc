@@ -7,11 +7,12 @@
 #include "function/container/MarsFunctionContainer.h"
 #include "function/http/MarsHttp.h"
 #include "function/health/MarsHealth.h"
+#include "promethean/MarsPromethean.h"
 
 using namespace module;
 using namespace function;
 
-MarsCoreModule::MarsCoreModule(const std::shared_ptr<app::NodeAgent>& agent) {
+MarsCoreModule::MarsCoreModule(const std::shared_ptr<app::NodeAgent> &agent) {
     nodeAgent = agent;
     container = std::make_shared<function::container::MarsFunctionContainer>();
 }
@@ -39,7 +40,9 @@ void MarsCoreModule::loadOs() {
 }
 
 void MarsCoreModule::loadPromethean() {
-
+    std::shared_ptr<function::promethean::MarsPromethean> prometheanServer = std::make_shared<function::promethean::MarsPromethean>(
+            nodeAgent);
+    container->bind(prometheanModuleName, prometheanServer);
 }
 
 void MarsCoreModule::loadWheel() {
@@ -52,11 +55,11 @@ void MarsCoreModule::loadJob() {
 
 void MarsCoreModule::moduleInit() {
     loadHttp();
+    loadPromethean();
     loadApollo();
     loadEureka();
     loadHealth();
     loadOs();
-    loadPromethean();
     loadWheel();
     loadJob();
 
@@ -64,7 +67,7 @@ void MarsCoreModule::moduleInit() {
     auto moduleMapBegin = moduleMap.cbegin();
     auto moduleMapEnd = moduleMap.cend();
 
-    for(; moduleMapBegin != moduleMapEnd; moduleMapBegin++) {
+    for (; moduleMapBegin != moduleMapEnd; moduleMapBegin++) {
         moduleMapBegin->second->initFunction();
     }
 }
@@ -74,7 +77,7 @@ void MarsCoreModule::moduleDestroy() {
     auto moduleMapBegin = moduleMap.cbegin();
     auto moduleMapEnd = moduleMap.cend();
 
-    for(; moduleMapBegin != moduleMapEnd; moduleMapBegin++) {
+    for (; moduleMapBegin != moduleMapEnd; moduleMapBegin++) {
         moduleMapBegin->second->shutdownFunction();
         moduleMap.erase(moduleMapBegin);
     }

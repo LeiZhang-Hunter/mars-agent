@@ -27,11 +27,8 @@ mars:
         health_enable: true
     #普罗米修斯数据监测
     Prometheus:
-      http_server_port: 11900
-      http_server_ip: 0.0.0.0
-      path: /usr/local/webserver/rig-agent-go/rig-agent.sock
-      health_path: /health
-      metrics_path: /metrics
+      unix_path: /usr/local/webserver/rig-agent-go/rig-agent.sock
+      http_path: /metrics
 
 
   extension:

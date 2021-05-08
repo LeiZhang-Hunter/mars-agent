@@ -25,14 +25,21 @@ MarsHealth::MarsHealth(const std::shared_ptr<app::NodeAgent> &agent) {
 }
 
 void MarsHealth::initFunction() {
+    if (isInit) {
+        return;
+    }
     //循环配置文件
     for (auto it = healthConfig.begin(); it != healthConfig.end(); it++) {
         router->getRequest(it->second->http_path, it->second->action);
     }
+    isInit = true;
 }
 
 void MarsHealth::shutdownFunction() {
-
+    if (!isInit) {
+        return;
+    }
+    isInit = false;
 }
 
 bool MarsHealth::loadConfig(const YAML::Node& yamlConfig) {
