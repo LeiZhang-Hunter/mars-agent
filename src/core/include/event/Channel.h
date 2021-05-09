@@ -17,7 +17,7 @@
 
 
 namespace Event {
-    typedef std::function<void()> EventCallable;
+    typedef std::function<void(struct bufferevent *bev, void *ctx)> EventCallable;
 
     class EventLoop;
 
@@ -35,6 +35,10 @@ namespace Event {
             return true;
         }
 
+        EventCallable getOnReadCallable() {
+            return eventOnRead;
+        }
+
         bool setOnCloseCallable(const EventCallable &callable) {
             eventOnClose = callable;
             return true;
@@ -48,6 +52,10 @@ namespace Event {
         bool setOnWriteCallable(const EventCallable &callable) {
             eventOnWrite = callable;
             return true;
+        }
+
+        EventCallable getOnWriteCallable() {
+            return eventOnWrite;
         }
 
         bool setEvents(uint32_t _events) {

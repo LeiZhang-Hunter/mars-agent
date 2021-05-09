@@ -8,6 +8,7 @@
 #include <memory>
 #include "MarsFunctionObject.h"
 #include <Noncopyable.h>
+
 namespace app {
     class NodeAgent;
 }
@@ -18,6 +19,7 @@ namespace function {
 
     namespace promethean {
         class MarsPrometheanConfig;
+
         class MarsPromethean
                 : public MarsFunctionObject, public std::enable_shared_from_this<MarsPromethean>, public Noncopyable {
         public:
@@ -27,17 +29,28 @@ namespace function {
 
             void shutdownFunction();
 
+            std::shared_ptr<app::NodeAgent> getNodeAgent() {
+                return nodeAgent;
+            }
+
             ~MarsPromethean();
 
         private:
-            std::string unixPath;
+            int loadUnixServer();
 
-            std::string httpPath;
+            static void
+            prometheanCbListener(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *addr, int len,
+                                 void *ptr);
 
             //路由
             std::shared_ptr<http::MarsHttpRouter> router;
 
             std::shared_ptr<MarsPrometheanConfig> prometheanConfig;
+
+            std::shared_ptr<app::NodeAgent> nodeAgent;
+
+
+            bool isInit = false;
         };
     }
 }

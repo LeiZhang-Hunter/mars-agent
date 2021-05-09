@@ -1,7 +1,10 @@
 //
 // Created by zhanglei on 2021/4/5.
 //
-
+extern "C" {
+#include <event2/buffer.h>
+#include <event.h>
+}
 #include <iostream>
 #include <zconf.h>
 #include "event/Channel.h"
@@ -20,34 +23,50 @@ bool Event::EventLoop::updateChannel(const std::shared_ptr<Channel> &channel) {
     return true;
 }
 
-void Event::EventLoop::onEvent(evutil_socket_t fd, short events, void * args) {
+void Event::EventLoop::onRead(bufferevent* evClient, void* arg) {
+    //管道事件触发
+    auto channel = static_cast<Channel *>(arg);
+    EventCallable callable = channel->getOnReadCallable();
+    std::cout << "read" << std::endl;
+    if (callable) {
+        callable(evClient, arg);
+    }
+}
+
+void Event::EventLoop::onWrite(bufferevent* evClient, void* arg) {
+
+}
+
+void Event::EventLoop::onEvent(bufferevent* ev, short flag, void* arg) {
 
     //管道不能是空的
-    if (!args)
+    if (!arg)
         return;
 
-    char buf[100];
-    read(fd, buf, sizeof(buf));
     //管道事件触发
-    auto channel = static_cast<Channel *>(args);
-//    channel->setEvents(events);
-    channel->handelEvent();
+    auto channel = static_cast<Channel *>(arg);
+////    channel->setEvents(events);
+//    channel->handelEvent();
 }
 
 bool Event::EventLoop::eventSet(const std::shared_ptr<Channel>& channel) {
     std::cout << "eventSet" << std::endl;
     //
-    struct event* eventFd = event_new(base, channel->getChannelFd(), channel->getEvents(), onEvent,
-                                      static_cast<void *>(channel.get()));
+    //添加新事件
+    struct bufferevent *client;
+    client = bufferevent_socket_new(base, channel->getChannelFd(), BEV_OPT_CLOSE_ON_FREE);
+
     int ret = 0;
     if (channel->getTimer().tv_usec > 0) {
         struct timeval time;
+
         time.tv_sec = channel->getTimer().tv_sec;
         time.tv_usec = channel->getTimer().tv_usec;
-        ret = event_add(eventFd, &time);
-    } else {
-        ret = event_add(eventFd, nullptr);
+        bufferevent_set_timeouts(client, &time, nullptr);
     }
+    std::cout << channel->getChannelFd() << std::endl;
+    bufferevent_setcb (client, onRead, onWrite, onEvent,  static_cast<void *>(channel.get()));
+    bufferevent_enable (client, channel->getEvents());
     return !ret;
 }
 

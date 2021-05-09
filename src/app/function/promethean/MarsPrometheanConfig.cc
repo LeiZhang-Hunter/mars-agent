@@ -19,6 +19,4 @@ void MarsPrometheanConfig::load(const YAML::Node &node) {
     if (node["http_path"]) {
         http_path = node["http_path"].as<std::string>();
     }
-
-
 }

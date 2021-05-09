@@ -57,7 +57,11 @@ namespace Event {
             return base;
         }
 
-        static void onEvent(evutil_socket_t, short, void *);
+        static void onEvent(bufferevent* ev, short flag, void* arg);
+
+        static void onRead(bufferevent* evClient, void* arg);
+
+        static void onWrite(bufferevent* evClient, void* arg);
 
         ~EventLoop() {
 

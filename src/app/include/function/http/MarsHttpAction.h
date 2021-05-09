@@ -11,10 +11,11 @@ extern "C" {
 #include <memory>
 #include <functional>
 #include <string>
-#include "http/MarsHttpResponse.h"
 
 namespace function {
     namespace http {
+
+        class MarsHttpResponse;
 
         typedef std::function<void(struct evhttp_request *request,
                                    const std::shared_ptr<MarsHttpResponse> &response)> usesClosure;

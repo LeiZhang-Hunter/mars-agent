@@ -5,6 +5,9 @@
 #ifndef MARS_AGENT_MARSPROMETHEANCONFIG_H
 #define MARS_AGENT_MARSPROMETHEANCONFIG_H
 namespace function {
+    namespace http {
+        class MarsHttpAction;
+    }
     namespace promethean {
         class MarsPrometheanConfig {
         public:

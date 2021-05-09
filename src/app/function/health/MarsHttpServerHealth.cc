@@ -8,10 +8,10 @@ using namespace function::health;
 
 void http_request_done(struct evhttp_request *req, void *arg) {
     auto response = static_cast<function::http::MarsHealthHttpResponse*>(arg);
-
     if (!req) {
         response->response->response(200, "{\"status\":\"DOWN\"}");
         response->destroy();
+        evhttp_connection_free(response->connection);
         return;
     }
 
@@ -22,6 +22,7 @@ void http_request_done(struct evhttp_request *req, void *arg) {
     } else {
         response->response->response(200, "{\"status\":\"DOWN\"}");
     }
+    evhttp_connection_free(response->connection);
     response->destroy();
 }
 MarsHttpServerHealth::MarsHttpServerHealth(const std::string &ip, short health_port,
