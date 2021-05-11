@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.hupu.rig.network.register.v2";
+option csharp_namespace = "Rig.NetworkProtocol";
+option go_package = "agent/com.hupu.rig.agent/pb/agent/register2";
+
+import "common/common.proto";
+
+
+service Register {
+    rpc doServiceRegister (Services) returns (ServiceRegisterMapping) {
+    }
+
+    rpc doServiceInstanceRegister (ServiceInstances) returns (ServiceInstanceRegisterMapping) {
+    }
+
+    rpc doEndpointRegister (Endpoints) returns (EndpointMapping) {
+    }
+
+    rpc doNetworkAddressRegister (NetAddresses) returns (NetAddressMapping) {
+    }
+
+    rpc doServiceAndNetworkAddressMappingRegister (ServiceAndNetworkAddressMappings) returns(Commands) {
+    }
+}
+
+//服务注册
+message Services {
+    repeated Service services = 1;
+}
+
+message Service {
+    string serviceName = 1;
+    repeated KeyStringValuePair tags = 3;
+    repeated KeyStringValuePair properties = 4;
+}
+
+message ServiceRegisterMapping {
+    repeated KeyIntValuePair services = 1;
+}
+
+//服务实例注册
+message ServiceInstances {
+    repeated ServiceInstance instances = 1;
+}
+
+message ServiceInstance {
+    int32 serviceId = 1;
+    string instanceUUID = 2;
+    int64 time = 3;
+    repeated KeyStringValuePair tags = 4;
+    repeated KeyStringValuePair properties = 5;
+    repeated Plugin plugins = 6;
+    AgentInstance agentInstance = 7;
+}
+
+message Plugin {
+    string pluginName = 1;
+    string pluginVersion = 2;
+    string activation = 3;
+}
+
+message AgentInstance {
+    string agentVersion = 1;
+    string appName = 2;
+}
+
+message ServiceInstanceRegisterMapping {
+    repeated KeyIntValuePair serviceInstances = 1;
+}
+
+
+message NetAddresses {
+    repeated string addresses = 1;
+}
+
+message NetAddressMapping {
+    repeated KeyIntValuePair addressIds = 1;
+}
+
+
+message Endpoints {
+    repeated Endpoint endpoints = 1;
+}
+
+message Endpoint {
+    int32 serviceId = 1;
+    string endpointName = 2;
+    repeated KeyStringValuePair tags = 3;
+    repeated KeyStringValuePair properties = 4;
+
+    DetectPoint from = 5;
+}
+
+message EndpointMapping {
+    repeated EndpointMappingElement elements = 1;
+}
+
+message EndpointMappingElement {
+    int32 serviceId = 1;
+    string endpointName = 2;
+    int32 endpointId = 3;
+    DetectPoint from = 4;
+}
+
+message ServiceAndNetworkAddressMappings {
+    repeated ServiceAndNetworkAddressMapping mappings = 1;
+}
+
+message ServiceAndNetworkAddressMapping {
+    int32 serviceId = 1;
+    int32 serviceInstanceId = 2;
+    string networkAddress = 3;
+    int32 networkAddressId = 4;
+}

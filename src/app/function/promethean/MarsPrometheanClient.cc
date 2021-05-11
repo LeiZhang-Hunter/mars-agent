@@ -7,11 +7,11 @@ extern "C" {
 }
 #include <iostream>
 #include "promethean/MarsPrometheanClient.h"
-
+#include "os/UnixCurrentThread.h"
 using namespace function;
 void promethean::MarsPrometheanClient::onRead(struct bufferevent *bev, void *ctx) {
     char msg[1024];
     size_t readSize = bufferevent_read(bev, &msg, sizeof(msg));
     msg[readSize] = '\0';
-    std::cout << msg << std::endl;
+    std::cout << OS::UnixCurrentThread::tid() << msg << std::endl;
 }

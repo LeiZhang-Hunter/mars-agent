@@ -25,6 +25,9 @@ mars:
         health_timeout: 7000
         http_path: /health/ugcaudit-nweb-api
         health_enable: true
+    skywalking:
+      grpc: "10.64.57.116:11800"
+      enable_reg: true
     #普罗米修斯数据监测
     promethean:
       unix_path: /home/zhanglei/ourc/mars-agent/lib/rig-agent.sock
