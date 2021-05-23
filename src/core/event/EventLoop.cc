@@ -23,6 +23,20 @@ bool Event::EventLoop::updateChannel(const std::shared_ptr<Channel> &channel) {
     return true;
 }
 
+bool Event::EventLoop::deleteChannel(const std::shared_ptr<Channel>& channel)
+{
+    //这里不要加锁，不要发生竞争关系
+    ChannelMap::iterator it;
+
+    it = channels.find(channel->getChannelFd());
+
+    if (it != channels.end()) {
+        channels.erase(it);
+        return true;
+    }
+    return false;
+}
+
 void Event::EventLoop::onRead(bufferevent* evClient, void* arg) {
     //管道事件触发
     auto channel = static_cast<Channel *>(arg);
@@ -45,8 +59,11 @@ void Event::EventLoop::onEvent(bufferevent* ev, short flag, void* arg) {
 
     //管道事件触发
     auto channel = static_cast<Channel *>(arg);
-////    channel->setEvents(events);
-//    channel->handelEvent();
+
+    if (flag & BEV_OPT_CLOSE_ON_FREE) {
+        channel->close(ev, arg);
+    }
+//    channel->handelEvent(flag);
 }
 
 bool Event::EventLoop::eventSet(const std::shared_ptr<Channel>& channel) {

@@ -12,10 +12,17 @@ namespace function {
         class MarsHttpResponse;
     }
     namespace promethean {
+
+        class MarsPrometheanObject;
+
         class MarsPrometheanHttpServer {
         public:
+            MarsPrometheanHttpServer(const std::shared_ptr<MarsPrometheanObject>& object);
             void handle(struct evhttp_request *request,
                                               const std::shared_ptr<function::http::MarsHttpResponse> &response);
+
+        private:
+            std::shared_ptr<MarsPrometheanObject> promethean;
         };
     }
 }

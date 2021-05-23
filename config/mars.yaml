@@ -31,6 +31,7 @@ mars:
     #普罗米修斯数据监测
     promethean:
       unix_path: /home/zhanglei/ourc/mars-agent/lib/rig-agent.sock
+      unix_client_max_buffer: 65535
       http_path: /metrics
 
 

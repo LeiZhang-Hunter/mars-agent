@@ -12,11 +12,9 @@ extern "C" {
 #include <arpa/inet.h>
 }
 
-#include <cstring>
 #include "os/UnixThread.h"
 #include "os/UnixThreadContainer.h"
 #include "event/Channel.h"
-#include "event/EventLoop.h"
 #include "promethean/MarsPromethean.h"
 #include "NodeAgent.h"
 #include "config/MarsConfig.h"
@@ -27,6 +25,7 @@ extern "C" {
 #include "promethean/MarsPrometheanConfig.h"
 #include "promethean/MarsPrometheanHttpServer.h"
 #include "promethean/MarsPrometheanClient.h"
+#include "promethean/MarsPrometheanObject.h"
 
 using namespace function;
 using namespace std::placeholders;
@@ -54,7 +53,8 @@ void promethean::MarsPromethean::initFunction() {
     //启动域套接字
     loadUnixServer();
     std::shared_ptr<http::MarsHttpAction> action = std::make_shared<http::MarsHttpAction>();
-    std::shared_ptr<MarsPrometheanHttpServer> server = std::make_shared<MarsPrometheanHttpServer>();
+    promethean = std::make_shared<MarsPrometheanObject>();
+    std::shared_ptr<MarsPrometheanHttpServer> server = std::make_shared<MarsPrometheanHttpServer>(promethean);
     action->setUsers(std::bind(&MarsPrometheanHttpServer::handle, server, _1, _2));
     router->getRequest(prometheanConfig->http_path, action);
     isInit = true;
@@ -102,7 +102,7 @@ void promethean::MarsPromethean::prometheanCbListener(struct evconnlistener *lis
     auto *promethean = (promethean::MarsPromethean*)ptr;
     std::shared_ptr<OS::UnixThread> thread = promethean->getNodeAgent()->getUnixThreadContainer()->getRandThread();
     std::shared_ptr<Event::Channel> channel = std::make_shared<Event::Channel>(thread->getEventLoop(), fd);
-    std::shared_ptr<MarsPrometheanClient> prometheanClient = std::make_shared<MarsPrometheanClient>();
+    std::shared_ptr<MarsPrometheanClient> prometheanClient = std::make_shared<MarsPrometheanClient>(fd, promethean->promethean);
     channel->setOnReadCallable(std::move(std::bind(&MarsPrometheanClient::onRead, prometheanClient,
             _1, _2)));
     channel->enableReading(-1);

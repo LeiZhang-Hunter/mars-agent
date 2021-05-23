@@ -4,6 +4,8 @@
 extern "C" {
 #include "evhttp.h"
 }
+
+#include <iostream>
 #include "function/http/MarsHttpResponse.h"
 
 using namespace function::http;
@@ -16,6 +18,7 @@ MarsHttpResponse::MarsHttpResponse(struct evhttp_request *requestData, const cha
 }
 
 bool MarsHttpResponse::header(const std::string& key, const std::string& value) {
+    evhttp_add_header(request->output_headers, key.c_str(), value.c_str());
     return true;
 }
 
@@ -24,7 +27,7 @@ bool MarsHttpResponse::response(short code, const std::string& message) {
         return false;
     }
     evbuffer_add_printf(httpBuffer, message.c_str(), httpUri);
-    evhttp_send_reply(request, code, message.c_str(), httpBuffer);
+    evhttp_send_reply(request, code, "", httpBuffer);
     return true;
 }
 

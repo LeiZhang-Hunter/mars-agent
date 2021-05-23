@@ -20,6 +20,8 @@ namespace function {
     namespace promethean {
         class MarsPrometheanConfig;
 
+        class MarsPrometheanObject;
+
         class MarsPromethean
                 : public MarsFunctionObject, public std::enable_shared_from_this<MarsPromethean>, public Noncopyable {
         public:
@@ -48,6 +50,8 @@ namespace function {
             std::shared_ptr<MarsPrometheanConfig> prometheanConfig;
 
             std::shared_ptr<app::NodeAgent> nodeAgent;
+
+            std::shared_ptr<MarsPrometheanObject> promethean;
 
 
             bool isInit = false;

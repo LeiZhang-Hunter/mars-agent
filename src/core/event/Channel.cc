@@ -9,7 +9,9 @@ void Event::Channel::update() {
     loop->updateChannel(shared_from_this());
 }
 
-bool Event::Channel::handelEvent() {
+bool Event::Channel::handelEvent(short flag) {
+    if (flag & BEV_OPT_CLOSE_ON_FREE) {
+    }
 //    /**
 //     * EPOLLIN 判断刻度
 //     * EPOLLPRI 判断外带数据
@@ -23,4 +25,11 @@ bool Event::Channel::handelEvent() {
 //        if (eventOnWrite) eventOnWrite();
 //    }
     return true;
+}
+
+void Event::Channel::close(bufferevent* evClient, void* arg) {
+    if (eventOnClose)
+        eventOnClose(evClient, arg);
+
+    loop->deleteChannel(shared_from_this());
 }

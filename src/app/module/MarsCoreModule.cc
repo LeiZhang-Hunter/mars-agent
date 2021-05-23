@@ -8,6 +8,7 @@
 #include "function/http/MarsHttp.h"
 #include "function/health/MarsHealth.h"
 #include "promethean/MarsPromethean.h"
+#include "skywalking/MarsSkyWalking.h"
 
 using namespace module;
 using namespace function;

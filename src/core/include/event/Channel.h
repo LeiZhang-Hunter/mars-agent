@@ -39,6 +39,10 @@ namespace Event {
             return eventOnRead;
         }
 
+        EventCallable getOnCloseCallable() {
+            return eventOnClose;
+        }
+
         bool setOnCloseCallable(const EventCallable &callable) {
             eventOnClose = callable;
             return true;
@@ -100,9 +104,11 @@ namespace Event {
             return true;
         }
 
-        bool handelEvent();
+        bool handelEvent(short flag);
 
         void update();
+
+        void close(bufferevent* evClient, void* arg);
 
         struct timeval& getTimer() {
             return time;

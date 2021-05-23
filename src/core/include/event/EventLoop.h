@@ -49,6 +49,13 @@ namespace Event {
         bool updateChannel(const std::shared_ptr<Channel>& channel);
 
         /**
+         * 更新管道
+         * @param channel
+         * @return
+         */
+        bool deleteChannel(const std::shared_ptr<Channel>& channel);
+
+        /**
          * 获取基础事件
          * @return
          */
