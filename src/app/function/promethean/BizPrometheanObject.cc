@@ -106,10 +106,96 @@ void promethean::BizPrometheanObject::parser(const std::string& content) {
             return;
         }
 
-        dispatch(name, type, labels, value);
+        //标签信息
+        Json::Value config = prometheanJsonObject["config"];
+        dispatch(name, type, labels, value, config);
     } catch (std::exception& err) {
         std::cout << err.what() << std::endl;
         return;
+    }
+}
+
+void promethean::BizPrometheanObject::loadSummaryConfig(std::vector<prometheus::detail::CKMSQuantiles::Quantile>& quantile,
+                                                        const Json::Value& config) {
+    if (config.empty()) {
+        return;
+    }
+
+    if (!config.isObject()) {
+        return;
+    }
+
+    Json::Value percentile = config["percentile"];
+    if (percentile.empty()) {
+        return;
+    }
+
+    if (!percentile.isString() && !percentile.isInt() && !percentile.isDouble()) {
+        return;
+    }
+
+    std::string percentileString = config["percentile"].asString();
+    if (percentileString.empty()) {
+        return;
+    }
+
+    //按照逗号切割，成为数组
+    std::vector<std::string> percentileVector = stringParser.split(percentileString, ",");
+    if (percentileVector.empty()) {
+        return;
+    }
+
+    auto iter = percentileVector.begin();
+    for(; iter != percentileVector.end(); iter++) {
+        double value = static_cast<double >(atof(iter->c_str()));
+        if (value > 0) {
+            prometheus::detail::CKMSQuantiles::Quantile data = {value, 0.001};
+            quantile.push_back(data);
+        }
+    }
+}
+
+void promethean::BizPrometheanObject::loadHistogramConfig(std::vector<double>& histogramBucket,
+                         const Json::Value& config) {
+    if (config.empty()) {
+        return;
+    }
+
+    if (!config.isObject()) {
+        return;
+    }
+
+    Json::Value bucket = config["sla"];
+    if (bucket.empty()) {
+        return;
+    }
+
+    if (bucket.empty()) {
+        return;
+    }
+
+    if (!bucket.isString() && !bucket.isInt() && !bucket.isDouble()) {
+        return;
+    }
+
+    std::string bucketString = config["sla"].asString();
+    if (bucketString.empty()) {
+        return;
+    }
+
+    //按照逗号切割，成为数组
+    std::vector<std::string> bucketVector = stringParser.split(bucketString, ",");
+    if (bucketVector.empty()) {
+        return;
+    }
+
+    auto iter = bucketVector.begin();
+    for(; iter != bucketVector.end(); iter++) {
+        double value = static_cast<double >(atof(iter->c_str()));
+        std::cout << value << std::endl;
+        if (value > 0) {
+            histogramBucket.push_back(value);
+        }
     }
 }
 
@@ -117,7 +203,8 @@ void promethean::BizPrometheanObject::dispatch(
         const std::string& name,
         const std::string& type,
         const std::map<std::string, std::string>& labels,
-        double value) {
+        double value,
+        const Json::Value& config) {
     if (type == "count") {
         auto& packCounter = prometheanObject->regCountPacket(name);
         auto& biz_counter = packCounter.Add(labels);
@@ -134,19 +221,22 @@ void promethean::BizPrometheanObject::dispatch(
 
     if (type == "summary") {
         auto& summary_family = prometheanObject->regSummaryPacket(name);
-        auto& summary = summary_family.Add(labels, prometheus::Summary::Quantiles{
-                {0.5, 0.05}, {0.9, 0.01}, {0.95, 0.005}, {0.99, 0.001}});
+        std::vector<prometheus::detail::CKMSQuantiles::Quantile> quantileConfig;
+        quantileConfig = prometheus::Summary::Quantiles{};
+        loadSummaryConfig(quantileConfig, config);
+        auto& summary = summary_family.Add(labels, quantileConfig);
         summary.Observe(value);
         return;
     }
 
     if (type == "histogram") {
         auto& packCounter = prometheanObject->regHistogramPacket(name);
-        auto& biz_counter = packCounter.Add(labels,
-                prometheus::Histogram::BucketBoundaries{1, 2});
+        prometheus::Histogram::BucketBoundaries bucketConfig = {};
+        loadHistogramConfig(bucketConfig, config);
+        auto& biz_counter = packCounter.Add(labels, bucketConfig);
         biz_counter.Observe(value);
         return;
     }
 
-    throw std::range_error("invalid argument");
+    throw std::range_error("invalid type argument");
 }
