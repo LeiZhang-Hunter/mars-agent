@@ -15,14 +15,14 @@ extern "C" {
 #include "promethean/MarsPrometheanClient.h"
 #include "promethean/MarsPrometheanObject.h"
 #include "promethean/BizPrometheanObject.h"
-#include "promethean/HttpStandardPrometheanObject.h"
+#include "promethean/MarsHttpStandardPrometheanObject.h"
 
 using namespace function;
 
 promethean::MarsPrometheanClient::MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject>& object) {
     clientFd = fd;
     bizParser = std::make_shared<BizPrometheanObject>(object);
-    httpParser = std::make_shared<HttpStandardPrometheanObject>();
+    httpParser = std::make_shared<MarsHttpStandardPrometheanObject>(object);
 }
 
 void promethean::MarsPrometheanClient::onRead(struct bufferevent *bev, void *ctx) {
@@ -92,6 +92,7 @@ void promethean::MarsPrometheanClient::parse(std::string &data) {
                 bizParser->parser(content);
                 break;
             default:
+                httpParser->parser(content);
                 break;
         }
 

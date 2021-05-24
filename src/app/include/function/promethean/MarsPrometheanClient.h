@@ -15,7 +15,7 @@ namespace common {
 namespace function {
     namespace promethean {
         class BizPrometheanObject;
-        class HttpStandardPrometheanObject;
+        class MarsHttpStandardPrometheanObject;
 
         class MarsPrometheanObject;
         class MarsPrometheanClient {
@@ -53,7 +53,7 @@ namespace function {
             int clientFd;
             int count = 0;
             std::shared_ptr<BizPrometheanObject> bizParser;
-            std::shared_ptr<HttpStandardPrometheanObject> httpParser;
+            std::shared_ptr<MarsHttpStandardPrometheanObject> httpParser;
         };
     }
 }

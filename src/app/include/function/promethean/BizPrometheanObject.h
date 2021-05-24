@@ -14,23 +14,27 @@ namespace function {
     namespace promethean {
         class BizPrometheanObject {
         public:
-            BizPrometheanObject(std::shared_ptr<promethean::MarsPrometheanObject>  object) : jsonParser(std::make_shared<common::MarsJson>()),
-                                    prometheanObject (std::move(object)){
-
+            BizPrometheanObject(const std::shared_ptr<promethean::MarsPrometheanObject> &object) : jsonParser(
+                    std::make_shared<common::MarsJson>()) {
+                prometheanObject = object;
             }
-            void parser(const std::string& content);
+
+            void parser(const std::string &content);
 
         private:
-            void dispatch(const std::string& name,
-                          const std::string& type,
+            void dispatch(const std::string &name,
+                          const std::string &type,
                           const std::map<std::string,
-                                  std::string>& labels, double value, const Json::Value& config);
+                                  std::string> &labels, double value, const Json::Value &config);
+
             //加载summary的配置
-            void loadSummaryConfig(std::vector<prometheus::detail::CKMSQuantiles::Quantile>& quantile,
-                    const Json::Value& config);
+            void loadSummaryConfig(std::vector<prometheus::detail::CKMSQuantiles::Quantile> &quantile,
+                                   const Json::Value &config);
+
             //加载histogram的配置
-            void loadHistogramConfig(std::vector<double>& histogramBucket,
-                                   const Json::Value& config);
+            void loadHistogramConfig(std::vector<double> &histogramBucket,
+                                     const Json::Value &config);
+
             std::shared_ptr<common::MarsJson> jsonParser;
             std::shared_ptr<promethean::MarsPrometheanObject> prometheanObject;
             common::MarsStringTool stringParser;

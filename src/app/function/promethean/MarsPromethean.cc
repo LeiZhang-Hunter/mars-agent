@@ -50,10 +50,11 @@ void promethean::MarsPromethean::initFunction() {
     if (isInit) {
         return;
     }
+    promethean = std::make_shared<MarsPrometheanObject>();
+
     //启动域套接字
     loadUnixServer();
     std::shared_ptr<http::MarsHttpAction> action = std::make_shared<http::MarsHttpAction>();
-    promethean = std::make_shared<MarsPrometheanObject>();
     std::shared_ptr<MarsPrometheanHttpServer> server = std::make_shared<MarsPrometheanHttpServer>(promethean);
     action->setUsers(std::bind(&MarsPrometheanHttpServer::handle, server, _1, _2));
     router->getRequest(prometheanConfig->http_path, action);
@@ -86,8 +87,6 @@ int promethean::MarsPromethean::loadUnixServer() {
     strncpy(gSrcAddr.sun_path, prometheanConfig->unix_path.c_str(), strlen(prometheanConfig->unix_path.c_str()));
     socklen_t gSockLen = strlen(gSrcAddr.sun_path) + sizeof(gSrcAddr.sun_family);
 
-
-
     //监听server
     evconnlistener_new_bind(nodeAgent->getLoop()->getEventBase(),prometheanCbListener, this
     , LEV_OPT_CLOSE_ON_FREE|LEV_OPT_REUSEABLE, 1024, (struct sockaddr *) &gSrcAddr, gSockLen);
@@ -97,8 +96,7 @@ int promethean::MarsPromethean::loadUnixServer() {
 void promethean::MarsPromethean::prometheanCbListener(struct evconnlistener *listener, evutil_socket_t fd,
                                                       struct sockaddr *addr, int len, void *ptr) {
     struct sockaddr_in* client = (sockaddr_in*)addr ;
-    std::cout << "connect new client: " << inet_ntoa(client->sin_addr) << "::"<< ntohs(client->sin_port)<< std::endl;
-//创建一个管道，随机绑定
+    //创建一个管道，随机绑定
     auto *promethean = (promethean::MarsPromethean*)ptr;
     std::shared_ptr<OS::UnixThread> thread = promethean->getNodeAgent()->getUnixThreadContainer()->getRandThread();
     std::shared_ptr<Event::Channel> channel = std::make_shared<Event::Channel>(thread->getEventLoop(), fd);

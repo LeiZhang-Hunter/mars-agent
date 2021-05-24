@@ -2,6 +2,7 @@
 // Created by zhanglei on 2021/5/22.
 //
 
+#include <iostream>
 #include "promethean/MarsPrometheanObject.h"
 
 using namespace function;
