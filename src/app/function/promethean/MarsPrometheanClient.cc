@@ -87,12 +87,12 @@ void promethean::MarsPrometheanClient::parse(std::string &data) {
             case '0':
                 break;
             case '1':
+                httpParser->parser(content);
                 break;
             case '2':
                 bizParser->parser(content);
                 break;
             default:
-                httpParser->parser(content);
                 break;
         }
 
