@@ -45,6 +45,8 @@ promethean::MarsPromethean::MarsPromethean(const std::shared_ptr<app::NodeAgent>
     }
     nodeAgent = agent;
 
+    //初始化普罗米修斯对象
+    promethean = std::make_shared<MarsPrometheanObject>();
     //启动时间轮算法,平均分配到所有线程上去
     std::shared_ptr<OS::UnixThreadContainer> threadContainer = this->getNodeAgent()->getUnixThreadContainer();
     std::vector<std::shared_ptr<OS::UnixThread>> pool = threadContainer->getThreadPool();
@@ -55,8 +57,7 @@ void promethean::MarsPromethean::finishFunction() {
     if (isFinish) {
         return;
     }
-    //初始化普罗米修斯对象
-    promethean = std::make_shared<MarsPrometheanObject>();
+
     //初始化时间轮
     prometheanServer->startTimingWheel();
     //启动域套接字监听
