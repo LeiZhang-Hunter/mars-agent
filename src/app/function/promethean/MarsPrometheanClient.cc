@@ -12,6 +12,7 @@ extern "C" {
 
 #include <iostream>
 #include "os/UnixCurrentThread.h"
+#include "promethean/MarsPrometheanConfig.h"
 #include "promethean/MarsPrometheanClient.h"
 #include "promethean/MarsPrometheanObject.h"
 #include "promethean/BizPrometheanObject.h"
@@ -19,14 +20,37 @@ extern "C" {
 
 using namespace function;
 
-promethean::MarsPrometheanClient::MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject>& object) {
+promethean::MarsPrometheanClient::MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject> &object,
+                                                       const std::shared_ptr<MarsPrometheanConfig> &config) {
     clientFd = fd;
     bizParser = std::make_shared<BizPrometheanObject>(object);
     httpParser = std::make_shared<MarsHttpStandardPrometheanObject>(object);
+    maxBufferSize = config->getClientBufferSize();
+
+}
+
+void promethean::MarsPrometheanClient::setWheelPtr(const Event::timingWheelPtr &wheelPtr_) {
+    wheelPtr = wheelPtr_;
+    {
+        Event::timingWheelObjectPtr wheelObject(new Event::TimingWheelObject(shared_from_this()));
+        Event::timingWheelObjectWeakPtr weakPtr(wheelObject);
+        wheelClientWeakPtr = weakPtr;
+        wheelPtr->add(wheelObject);
+    }
+    return;
+//    shared_ptr<function::promethean::timingWheelClientObjectStruct>
 }
 
 void promethean::MarsPrometheanClient::onRead(struct bufferevent *bev, void *ctx) {
     char msg[BUFSIZ];
+
+    if (wheelPtr) {
+        Event::timingWheelObjectPtr wheelObject(wheelClientWeakPtr.lock());
+        if (wheelObject) {
+            wheelPtr->add(wheelObject);
+        }
+    }
+
     while (runStatus) {
         size_t readSize = bufferevent_read(bev, &msg, 2);
 
@@ -39,6 +63,32 @@ void promethean::MarsPrometheanClient::onRead(struct bufferevent *bev, void *ctx
         parse(data);
     }
     std::cout << count << std::endl;
+}
+
+void promethean::MarsPrometheanClient::onClose(struct bufferevent *bev, Event::Channel *channel) {
+    if (clientFd > 0) {
+        clientFd = 0;
+    }
+
+    //关闭时间轮的对象
+    if (wheelPtr) {
+        Event::timingWheelObjectPtr wheelObject(wheelClientWeakPtr.lock());
+        wheelPtr->clear(wheelObject);
+        wheelObject.reset();
+    }
+
+
+}
+
+void promethean::MarsPrometheanClient::close() {
+    if (clientFd > 0) {
+        ::close(clientFd);
+        //解除绑定在channel上的链接
+        Event::EventLoop* loop = OS::UnixCurrentThread::loop();
+        loop->deleteChannelByFd(clientFd);
+        clientFd = 0;
+    }
+    std::cout << "use_count:" << shared_from_this().use_count() << std::endl;
 }
 
 void promethean::MarsPrometheanClient::parse(std::string &data) {
@@ -54,11 +104,11 @@ void promethean::MarsPrometheanClient::parse(std::string &data) {
         if (position == std::string::npos) {
 
             //检查缓冲区大小
-            if (buffer.length() > 65535) {
+            if (buffer.length() > maxBufferSize) {
                 ::close(clientFd);
                 break;
             }
-            if (data.length() > 65535) {
+            if (data.length() > maxBufferSize) {
                 ::close(clientFd);
                 break;
             }

@@ -36,6 +36,10 @@ namespace OS {
 
         std::shared_ptr<UnixThread> getRandThread();
 
+        std::vector<std::shared_ptr<UnixThread>> getThreadPool() {
+            return threadDispatcherManager;
+        }
+
         //检查线程是否已经注册
         ~UnixThreadContainer();
 

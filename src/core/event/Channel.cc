@@ -27,7 +27,7 @@ bool Event::Channel::handelEvent(short flag) {
     return true;
 }
 
-void Event::Channel::close(bufferevent* evClient, void* arg) {
+void Event::Channel::close(bufferevent* evClient, Channel* arg) {
     if (eventOnClose)
         eventOnClose(evClient, arg);
 

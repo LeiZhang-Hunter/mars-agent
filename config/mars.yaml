@@ -33,7 +33,8 @@ mars:
       unix_path: /home/zhanglei/ourc/mars-agent/lib/rig-agent.sock
       unix_client_max_buffer: 65535
       http_path: /metrics
-
+      wheel_idle_time: 5
+      wheel_check_interval: 1
 
   extension:
 

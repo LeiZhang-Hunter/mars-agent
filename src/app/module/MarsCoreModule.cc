@@ -73,6 +73,16 @@ void MarsCoreModule::moduleInit() {
     }
 }
 
+void MarsCoreModule::moduleFinish() {
+    auto moduleMap = container->getMap();
+    auto moduleMapBegin = moduleMap.cbegin();
+    auto moduleMapEnd = moduleMap.cend();
+
+    for (; moduleMapBegin != moduleMapEnd; moduleMapBegin++) {
+        moduleMapBegin->second->finishFunction();
+    }
+}
+
 void MarsCoreModule::moduleDestroy() {
     auto moduleMap = container->getMap();
     auto moduleMapBegin = moduleMap.cbegin();

@@ -55,6 +55,8 @@ namespace Event {
          */
         bool deleteChannel(const std::shared_ptr<Channel>& channel);
 
+        bool deleteChannelByFd(int fd);
+
         /**
          * 获取基础事件
          * @return

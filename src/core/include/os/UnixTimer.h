@@ -14,6 +14,9 @@
 namespace OS {
     class UnixTimer {
     public:
+        UnixTimer() {
+
+        }
         int createTimer() {
             timerFd = timerfd_create(CLOCK_MONOTONIC,  TFD_NONBLOCK | TFD_CLOEXEC);
             if (timerFd == -1) {
@@ -30,6 +33,9 @@ namespace OS {
          */
         void confirm();
 
+        ~UnixTimer() {
+
+        }
     private:
         int timerFd;
     };

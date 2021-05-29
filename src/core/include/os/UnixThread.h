@@ -76,7 +76,7 @@ namespace OS {
 
         //获取线程的tid
         size_t getTid() {
-            return mThreadID;
+            return proc->getThreadTid();
         }
 
         //获取线程内部的事件循环

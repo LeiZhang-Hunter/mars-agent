@@ -53,6 +53,9 @@ namespace module {
         //初始化模块
         void moduleInit();
 
+        //线程加载完成后会加载这个模块
+        void moduleFinish();
+
         //销毁模块
         void moduleDestroy();
 

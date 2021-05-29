@@ -14,7 +14,7 @@ void OS::UnixTimer::setInterval(int time) {
     int res = timerfd_settime(timerFd, 0, &new_value, nullptr);
     if (res == -1) {
         std::cerr << strerror(errno) << std::endl;
-        exit(-1);
+        return;
     }
 }
 

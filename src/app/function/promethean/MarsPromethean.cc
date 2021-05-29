@@ -14,6 +14,7 @@ extern "C" {
 
 #include "os/UnixThread.h"
 #include "os/UnixThreadContainer.h"
+#include "event/TimingWheel.h"
 #include "event/Channel.h"
 #include "promethean/MarsPromethean.h"
 #include "NodeAgent.h"
@@ -23,8 +24,8 @@ extern "C" {
 #include "http/MarsHttp.h"
 #include "http/MarsHttpRouter.h"
 #include "promethean/MarsPrometheanConfig.h"
+#include "promethean/MarsPrometheanServer.h"
 #include "promethean/MarsPrometheanHttpServer.h"
-#include "promethean/MarsPrometheanClient.h"
 #include "promethean/MarsPrometheanObject.h"
 
 using namespace function;
@@ -42,18 +43,28 @@ promethean::MarsPromethean::MarsPromethean(const std::shared_ptr<app::NodeAgent>
     if (yamPromethean) {
         prometheanConfig->load(yamPromethean);
     }
-
     nodeAgent = agent;
+
+    //启动时间轮算法,平均分配到所有线程上去
+    std::shared_ptr<OS::UnixThreadContainer> threadContainer = this->getNodeAgent()->getUnixThreadContainer();
+    std::vector<std::shared_ptr<OS::UnixThread>> pool = threadContainer->getThreadPool();
+    prometheanServer = std::make_shared<MarsPrometheanServer>(threadContainer, prometheanConfig);
+}
+
+void promethean::MarsPromethean::finishFunction() {
+    if (isFinish) {
+        return;
+    }
+    //初始化普罗米修斯对象
+    promethean = std::make_shared<MarsPrometheanObject>();
+    //初始化时间轮
+    prometheanServer->startTimingWheel();
+    //启动域套接字监听
+    loadUnixServer();
+    isFinish = true;
 }
 
 void promethean::MarsPromethean::initFunction() {
-    if (isInit) {
-        return;
-    }
-    promethean = std::make_shared<MarsPrometheanObject>();
-
-    //启动域套接字
-    loadUnixServer();
     std::shared_ptr<http::MarsHttpAction> action = std::make_shared<http::MarsHttpAction>();
     std::shared_ptr<MarsPrometheanHttpServer> server = std::make_shared<MarsPrometheanHttpServer>(promethean);
     action->setUsers(std::bind(&MarsPrometheanHttpServer::handle, server, _1, _2));
@@ -78,32 +89,16 @@ int promethean::MarsPromethean::loadUnixServer() {
             exit(-1);
         }
     }
-
-
     int socket = ::socket(AF_UNIX, SOCK_DGRAM, 0);
     struct sockaddr_un gSrcAddr = {0};
     memset(&gSrcAddr, 0, sizeof(gSrcAddr));
     gSrcAddr.sun_family = AF_UNIX;
     strncpy(gSrcAddr.sun_path, prometheanConfig->unix_path.c_str(), strlen(prometheanConfig->unix_path.c_str()));
     socklen_t gSockLen = strlen(gSrcAddr.sun_path) + sizeof(gSrcAddr.sun_family);
-
     //监听server
-    evconnlistener_new_bind(nodeAgent->getLoop()->getEventBase(),prometheanCbListener, this
-    , LEV_OPT_CLOSE_ON_FREE|LEV_OPT_REUSEABLE, 1024, (struct sockaddr *) &gSrcAddr, gSockLen);
+    evconnlistener_new_bind(nodeAgent->getLoop()->getEventBase(), MarsPrometheanServer::prometheanCbListener, this,
+                            LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE, 1024, (struct sockaddr *) &gSrcAddr, gSockLen);
     return socket;
-}
-
-void promethean::MarsPromethean::prometheanCbListener(struct evconnlistener *listener, evutil_socket_t fd,
-                                                      struct sockaddr *addr, int len, void *ptr) {
-    struct sockaddr_in* client = (sockaddr_in*)addr ;
-    //创建一个管道，随机绑定
-    auto *promethean = (promethean::MarsPromethean*)ptr;
-    std::shared_ptr<OS::UnixThread> thread = promethean->getNodeAgent()->getUnixThreadContainer()->getRandThread();
-    std::shared_ptr<Event::Channel> channel = std::make_shared<Event::Channel>(thread->getEventLoop(), fd);
-    std::shared_ptr<MarsPrometheanClient> prometheanClient = std::make_shared<MarsPrometheanClient>(fd, promethean->promethean);
-    channel->setOnReadCallable(std::move(std::bind(&MarsPrometheanClient::onRead, prometheanClient,
-            _1, _2)));
-    channel->enableReading(-1);
 }
 
 void promethean::MarsPromethean::shutdownFunction() {

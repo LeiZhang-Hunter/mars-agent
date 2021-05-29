@@ -12,6 +12,10 @@ namespace function {
 
         }
 
+        virtual void finishFunction() {
+
+        }
+
         virtual void shutdownFunction() {
 
         }

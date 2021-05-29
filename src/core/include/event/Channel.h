@@ -12,17 +12,17 @@
 #include <functional>
 
 #include "event.h"
-
 #include "Noncopyable.h"
 
 
 namespace Event {
-    typedef std::function<void(struct bufferevent *bev, void *ctx)> EventCallable;
 
     class EventLoop;
-
+    class Channel;
+    typedef std::function<void(struct bufferevent *bev, Channel *ctx)> EventCallable;
     class Channel : public Noncopyable, public std::enable_shared_from_this<Channel> {
     public:
+
         //初始化线程之间通讯的管道
         Channel(const std::shared_ptr<EventLoop> &loop_, int fd) {
             loop = loop_;
@@ -108,7 +108,11 @@ namespace Event {
 
         void update();
 
-        void close(bufferevent* evClient, void* arg);
+        void close(bufferevent* evClient, Channel* arg);
+
+        template<class T> void bindArgs(T args) {
+
+        }
 
         struct timeval& getTimer() {
             return time;

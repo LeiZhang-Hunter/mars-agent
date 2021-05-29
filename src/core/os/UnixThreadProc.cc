@@ -6,7 +6,11 @@
 
 #include "event/EventLoop.h"
 #include "os/UnixThreadProc.h"
-
+namespace OS {
+    namespace UnixCurrentThread {
+        __thread Event::EventLoop* currentLoop;
+    }
+}
 void OS::UnixThreadProc::onStop() {
     loop->quit();
 }
@@ -19,6 +23,8 @@ void OS::UnixThreadProc::runThread() {
     if (threadInitCallable) {
         threadInitCallable(loop);
     }
+
+    UnixCurrentThread::currentLoop = loop.get();
 
     //完成初始化通知主线程继续运行
     latch->down();

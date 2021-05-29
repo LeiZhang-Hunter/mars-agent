@@ -4,9 +4,14 @@
 
 #ifndef MARS_AGENT_MARSPROMETHEANCLIENT_H
 #define MARS_AGENT_MARSPROMETHEANCLIENT_H
+
 #include <memory>
 #include <vector>
 #include <unordered_set>
+
+#include "event/TimingWheel.h"
+#include "event/Channel.h"
+
 
 namespace common {
     class MarsJson;
@@ -15,10 +20,12 @@ namespace common {
 namespace function {
     namespace promethean {
         class BizPrometheanObject;
+
         class MarsHttpStandardPrometheanObject;
 
         class MarsPrometheanObject;
-        class MarsPrometheanClient {
+
+        class MarsPrometheanClient : public std::enable_shared_from_this<MarsPrometheanClient>, public Event::TimingWheelClient {
 
             enum {
                 REG = 0x01,
@@ -27,7 +34,8 @@ namespace function {
             };
 
         public:
-            MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject>& object);
+            MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject> &object,
+                                 const std::shared_ptr<MarsPrometheanConfig> &config);
 
             void onRead(struct bufferevent *bev, void *ctx);
 
@@ -35,25 +43,29 @@ namespace function {
 
             }
 
-            void parse(std::string& msg);
+            void onClose(struct bufferevent *bev, Event::Channel *ctx);
 
-            void tie(const std::shared_ptr<MarsPrometheanClient>& tie) {
-                tie_ = tie;
-            }
+            void parse(std::string &msg);
 
-            ~MarsPrometheanClient()
-            {
+            void setWheelPtr(const Event::timingWheelPtr &wheelPtr_);
+
+            ~MarsPrometheanClient() {
+                std::cout << "~MarsPrometheanClient" << std::endl;
                 buffer.clear();
             }
+
+            void close();
         private:
-            std::shared_ptr<MarsPrometheanClient> tie_;
-            std::unordered_set<int, std::vector<char>> bufferSet;
+
             std::string buffer;
             bool runStatus = true;
             int clientFd;
             int count = 0;
             std::shared_ptr<BizPrometheanObject> bizParser;
             std::shared_ptr<MarsHttpStandardPrometheanObject> httpParser;
+            size_t maxBufferSize;
+            Event::timingWheelPtr wheelPtr;
+            Event::timingWheelObjectWeakPtr wheelClientWeakPtr;
         };
     }
 }

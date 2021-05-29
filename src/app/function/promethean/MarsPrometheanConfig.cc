@@ -2,8 +2,8 @@
 // Created by zhanglei on 2021/4/16.
 //
 #include <string>
+#include <iostream>
 
-#include "yaml-cpp/yaml.h"
 
 #include "promethean/MarsPrometheanConfig.h"
 using namespace function::promethean;
@@ -18,5 +18,23 @@ void MarsPrometheanConfig::load(const YAML::Node &node) {
 
     if (node["http_path"]) {
         http_path = node["http_path"].as<std::string>();
+    }
+
+    try {
+        clientMaxBuffer = node["unix_client_max_buffer"].as<uint64_t>();
+    } catch (std::exception& err) {
+        std::cerr << err.what() << std::endl;
+    }
+
+    try {
+        idleTime = node["wheel_idle_time"].as<uint64_t>();
+    } catch (std::exception& err) {
+        std::cerr << err.what() << std::endl;
+    }
+
+    try {
+        checkInterval = node["wheel_check_interval"].as<uint64_t>();
+    } catch (std::exception& err) {
+        std::cerr << err.what() << std::endl;
     }
 }
