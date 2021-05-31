@@ -112,8 +112,8 @@ void OS::UnixThread::OnTask() {
     queue->dispatchTask();
 }
 
-void OS::UnixThread::wakeUp() {
-    uint64_t notify;
+ssize_t OS::UnixThread::wakeUp() {
+    uint64_t notify = 1;
     ssize_t n = ::write(wakeupChannelFd, &notify, sizeof(notify));
     if (n != sizeof(notify)) {
         std::cerr << "thread " << getTid() << " wake up " << wakeupChannelFd << " failed !" << std::endl;

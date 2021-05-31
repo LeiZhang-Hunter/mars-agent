@@ -87,7 +87,7 @@ namespace OS {
         /**
          * 事件唤醒
          */
-        void wakeUp();
+        ssize_t wakeUp();
 
     private:
 

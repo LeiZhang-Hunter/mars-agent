@@ -5,7 +5,10 @@
 #ifndef MARS_AGENT_MARSSKYWALKING_H
 #define MARS_AGENT_MARSSKYWALKING_H
 #include <memory>
+#include "NodeAgent.h"
+#include "os/UnixThread.h"
 #include "MarsFunctionObject.h"
+#include "MarsSkyWalkingConfig.h"
 namespace app {
     class NodeAgent;
 }
@@ -24,11 +27,18 @@ namespace function {
         public:
             MarsSkyWalking(const std::shared_ptr<app::NodeAgent> &agent);
             void initFunction();
-
+            void finishFunction();
             void shutdownFunction();
+            std::string regSkyWalking();
             ~MarsSkyWalking() {
 
             }
+
+        private:
+            std::shared_ptr<MarsSkyWalkingConfig> config;
+            std::shared_ptr<OS::UnixThread> thread;
+            std::string appRegString;
+            std::shared_ptr<MarsSkyWalkingConfig> skywalkingConfig;
         };
     }
 }

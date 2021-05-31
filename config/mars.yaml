@@ -1,5 +1,5 @@
 mars:
-  worker_number: 1
+  worker_number: 4
   pid_file: /data/www-data/yaml.pid
   #mars的核心功能健康检查
   core:
@@ -28,13 +28,14 @@ mars:
     skywalking:
       grpc: "10.64.57.116:11800"
       enable_reg: true
+      heartbeat_time: 10
     #普罗米修斯数据监测
     promethean:
       unix_path: /home/zhanglei/ourc/mars-agent/lib/rig-agent.sock
       unix_client_max_buffer: 65535
       http_path: /metrics
-      wheel_idle_time: 5
-      wheel_check_interval: 1
+      wheel_idle_time: 480
+      wheel_check_interval: 60
 
   extension:
 

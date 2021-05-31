@@ -5,6 +5,8 @@
 #ifndef MARS_AGENT_MARSFUNCTIONNAME_H
 #define MARS_AGENT_MARSFUNCTIONNAME_H
 
+#define SKYWALKING_MODULE_NAME "skywalking"
+
 #define APOLLO_MODULE_NAME "apollo"
 
 #define EUREKA_MODULE_NAME "eureka"

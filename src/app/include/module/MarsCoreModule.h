@@ -84,6 +84,9 @@ namespace module {
         //加载apollo
         void loadApollo();
 
+        //加载apollo
+        void loadSkyWalking();
+
         //加载eureka
         void loadEureka();
 

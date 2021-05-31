@@ -19,6 +19,47 @@ namespace function {
         virtual void shutdownFunction() {
 
         }
+
+        virtual void finishConfirm() {
+            isFinish = true;
+        }
+
+        virtual void resetFinish() {
+            isFinish = false;
+        }
+
+        virtual bool checkFinish() {
+            return isFinish;
+        }
+
+        virtual void resetInit() {
+            isInit = false;
+        }
+
+        virtual void initConfirm() {
+            isInit = true;
+        }
+
+        virtual bool checkInit() {
+            return isInit;
+        }
+
+        virtual void resetShutdown() {
+            isShutdown = false;
+        }
+
+        virtual void shutdownConfirm() {
+            isShutdown = true;
+        }
+
+        virtual bool checkShutdown() {
+            return isShutdown;
+        }
+
+    private:
+        bool isFinish = false;
+        bool isInit = false;
+        bool isShutdown = false;
     };
 }
 

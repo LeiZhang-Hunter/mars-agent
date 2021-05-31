@@ -50,11 +50,19 @@ void MarsCoreModule::loadWheel() {
 
 }
 
+//加载apollo
+void MarsCoreModule::loadSkyWalking() {
+    std::shared_ptr<function::skywalking::MarsSkyWalking> skyWalking = std::make_shared<function::skywalking::MarsSkyWalking>(
+            nodeAgent);
+    container->bind(prometheanModuleName, skyWalking);
+}
+
 void MarsCoreModule::loadJob() {
 
 }
 
 void MarsCoreModule::moduleInit() {
+    loadSkyWalking();
     loadHttp();
     loadPromethean();
     loadApollo();

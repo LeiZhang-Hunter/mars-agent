@@ -7,6 +7,8 @@
 #include "yaml-cpp/yaml.h"
 #include <string>
 
+#include "MarsFunctionName.h"
+
 namespace config {
     class MarsConfig {
     public:
