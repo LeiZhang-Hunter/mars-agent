@@ -15,12 +15,15 @@ skywalking::MarsSkyWalking::MarsSkyWalking(const std::shared_ptr<app::NodeAgent>
     } catch (std::exception& err) {
         std::cerr << err.what() << std::endl;
     }
+    grpcHandle = std::make_shared<MarsSkyWalkingHandle>(skywalkingConfig);
 }
 
 void skywalking::MarsSkyWalking::initFunction() {
     if (checkInit()) {
         return;
     }
+
+    //注册skywalking
 
     //启动一个grpc线程，因为grpc是同步的
     thread->Start();
@@ -38,6 +41,7 @@ void skywalking::MarsSkyWalking::finishFunction() {
 std::string skywalking::MarsSkyWalking::regSkyWalking()
 {
 //    thread->addTask();
+    return "";
 }
 
 

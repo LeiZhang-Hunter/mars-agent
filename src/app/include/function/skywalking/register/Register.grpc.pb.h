@@ -4,7 +4,7 @@
 #ifndef GRPC_register_2fRegister_2eproto__INCLUDED
 #define GRPC_register_2fRegister_2eproto__INCLUDED
 
-#include "register/Register.pb.h"
+#include "skywalking/register/Register.pb.h"
 
 #include <functional>
 #include <grpc/impl/codegen/port_platform.h>

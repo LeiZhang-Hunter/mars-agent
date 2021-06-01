@@ -9,6 +9,7 @@
 #include "os/UnixThread.h"
 #include "MarsFunctionObject.h"
 #include "MarsSkyWalkingConfig.h"
+#include "MarsSkyWalkingHandle.h"
 namespace app {
     class NodeAgent;
 }
@@ -39,6 +40,7 @@ namespace function {
             std::shared_ptr<OS::UnixThread> thread;
             std::string appRegString;
             std::shared_ptr<MarsSkyWalkingConfig> skywalkingConfig;
+            std::shared_ptr<MarsSkyWalkingHandle> grpcHandle;
         };
     }
 }
