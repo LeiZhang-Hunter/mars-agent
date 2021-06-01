@@ -2,8 +2,8 @@
 // If you make any local change, they will be lost.
 // source: register/InstancePing.proto
 
-#include "register/InstancePing.pb.h"
-#include "register/InstancePing.grpc.pb.h"
+#include "skywalking/register/InstancePing.pb.h"
+#include "skywalking/register/InstancePing.grpc.pb.h"
 
 #include <functional>
 #include <grpcpp/impl/codegen/async_stream.h>

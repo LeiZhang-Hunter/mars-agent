@@ -4,7 +4,7 @@
 #ifndef GRPC_register_2fInstancePing_2eproto__INCLUDED
 #define GRPC_register_2fInstancePing_2eproto__INCLUDED
 
-#include "register/InstancePing.pb.h"
+#include "skywalking/register/InstancePing.pb.h"
 
 #include <functional>
 #include <grpc/impl/codegen/port_platform.h>
