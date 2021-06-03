@@ -24,7 +24,11 @@ void skywalking::MarsSkyWalking::initFunction() {
     }
 
     //注册skywalking
+    if (!skywalkingConfig->getEnableReg()) {
+        return;
+    }
 
+    grpcHandle->reg();
     //启动一个grpc线程，因为grpc是同步的
     thread->Start();
     initConfirm();

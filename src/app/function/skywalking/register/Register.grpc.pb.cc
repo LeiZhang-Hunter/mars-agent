@@ -2,8 +2,8 @@
 // If you make any local change, they will be lost.
 // source: register/Register.proto
 
-#include "register/Register.pb.h"
-#include "register/Register.grpc.pb.h"
+#include "skywalking/register/Register.pb.h"
+#include "skywalking/register/Register.grpc.pb.h"
 
 #include <functional>
 #include <grpcpp/impl/codegen/async_stream.h>

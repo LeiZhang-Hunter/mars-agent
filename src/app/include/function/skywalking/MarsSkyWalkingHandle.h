@@ -13,18 +13,22 @@ namespace function {
     namespace skywalking {
         class MarsSkyWalkingHandle : public std::enable_shared_from_this<MarsSkyWalkingHandle>, public Noncopyable {
         public:
-            MarsSkyWalkingHandle(const std::shared_ptr<MarsSkyWalkingConfig>& config_) {
-                config = config_;
-            }
+            MarsSkyWalkingHandle(const std::shared_ptr<MarsSkyWalkingConfig>& config_);
 
             /**
              * 注册到skywalking的apm
              * @return
              */
-            std::string reg();
+            bool reg();
 
         private:
             std::shared_ptr<MarsSkyWalkingConfig> config;
+
+            std::string instanceId;
+
+            std::string uuid;
+
+            std::string regString;
         };
     }
 }
