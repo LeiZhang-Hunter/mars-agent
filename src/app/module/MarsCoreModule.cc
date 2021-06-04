@@ -54,7 +54,7 @@ void MarsCoreModule::loadWheel() {
 void MarsCoreModule::loadSkyWalking() {
     std::shared_ptr<function::skywalking::MarsSkyWalking> skyWalking = std::make_shared<function::skywalking::MarsSkyWalking>(
             nodeAgent);
-    container->bind(prometheanModuleName, skyWalking);
+    container->bind(skywalkingModuleName, skyWalking);
 }
 
 void MarsCoreModule::loadJob() {

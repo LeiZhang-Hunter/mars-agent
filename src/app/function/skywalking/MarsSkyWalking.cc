@@ -15,7 +15,7 @@ skywalking::MarsSkyWalking::MarsSkyWalking(const std::shared_ptr<app::NodeAgent>
     } catch (std::exception& err) {
         std::cerr << err.what() << std::endl;
     }
-    grpcHandle = std::make_shared<MarsSkyWalkingHandle>(skywalkingConfig);
+    grpcHandle = std::make_shared<MarsSkyWalkingHandle>(skywalkingConfig, thread);
 }
 
 void skywalking::MarsSkyWalking::initFunction() {

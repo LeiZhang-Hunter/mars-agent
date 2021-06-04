@@ -5,8 +5,10 @@
 extern "C" {
 #include "common/MarsUuid.h"
 }
+#include "os/UnixTimer.h"
 #include "skywalking/MarsSkyWalkingHandle.h"
 #include "skywalking/register/Register.grpc.pb.h"
+#include "skywalking/register/InstancePing.grpc.pb.h"
 
 using namespace function;
 using grpc::Channel;
@@ -14,18 +16,20 @@ using grpc::ChannelArguments;
 using grpc::ClientContext;
 using grpc::Status;
 
-skywalking::MarsSkyWalkingHandle::MarsSkyWalkingHandle(const std::shared_ptr<MarsSkyWalkingConfig> &config_) {
+skywalking::MarsSkyWalkingHandle::MarsSkyWalkingHandle(const std::shared_ptr<MarsSkyWalkingConfig> &config_,
+        const std::shared_ptr<OS::UnixThread>& thread_) {
     config = config_;
     char buf[UUID4_LEN];
     uuid4_init();
     uuid4_generate(buf);
     uuid = buf;
+    thread = thread_;
 }
 
 
 bool skywalking::MarsSkyWalkingHandle::reg() {
     ChannelArguments args;
-    std::shared_ptr<Channel> grpcChannel =  CreateCustomChannel(
+    grpcChannel =  CreateCustomChannel(
             config->getGrpcAddress(), grpc::InsecureChannelCredentials(), args);
     std::unique_ptr<Register::Stub> stub_ = Register::NewStub(grpcChannel);
 
@@ -58,7 +62,7 @@ bool skywalking::MarsSkyWalkingHandle::reg() {
     auto iter = servicesData.begin();
 
     //获取service的id
-    unsigned int serviceId = 0;
+    serviceId = 0;
     for (iter; iter != servicesData.end() ; iter++) {
         serviceId = iter->value();
         break;
@@ -141,5 +145,33 @@ bool skywalking::MarsSkyWalkingHandle::reg() {
     }
 
     regString = (instanceId + "," + uuid);
+
+    //加入定时器，定期检测心跳
+    OS::UnixTimer timer;
+    int timerFd = timer.createTimer();
+    if (timerFd == -1) {
+        std::cerr << "timer:" << timerFd << " create failed;" << "skywalking ping error" << std::endl;
+        return true;
+    }
+
+    timer.setInterval(config->getHeartbeatTime());
+
+    //循环线程池子
+    pingChannel = std::make_shared<Event::Channel>(thread->getEventLoop(), timerFd);
+    pingChannel->setOnReadCallable(std::bind(&MarsSkyWalkingHandle::ping, shared_from_this()));
+    pingChannel->enableReading(-1);
     return true;
+}
+
+bool skywalking::MarsSkyWalkingHandle::ping() {
+    auto timeNow = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+    std::unique_ptr<ServiceInstancePing::Stub> stubPing_ = ServiceInstancePing::NewStub(grpcChannel);
+    ClientContext pingContext;
+    Commands respCommand;
+    ServiceInstancePingPkg requestPing;
+    requestPing.set_time(timeNow.count());
+    requestPing.set_serviceinstanceuuid(uuid);
+    requestPing.set_serviceinstanceid(serviceId);
+    auto status = stubPing_->doPing(&pingContext, requestPing, &respCommand);
+    return status.ok();
 }

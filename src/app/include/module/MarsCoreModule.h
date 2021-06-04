@@ -77,6 +77,8 @@ namespace module {
 
         std::string prometheanModuleName = PROMETHEAN_MODULE_NAME;
 
+        std::string skywalkingModuleName = SKYWALKING_MODULE_NAME;
+
         std::string wheelModuleName = WHEEL_MODULE_NAME;
 
         std::string jobModuleName = JOB_MODULE_NAME;

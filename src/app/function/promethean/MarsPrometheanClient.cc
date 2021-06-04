@@ -5,26 +5,26 @@ extern "C" {
 #include <event2/buffer.h>
 #include <event.h>
 }
-
-#include "common/MarsJson.h"
-
 #include <string>
 
 #include <iostream>
 #include "os/UnixCurrentThread.h"
+#include "common/MarsJson.h"
 #include "promethean/MarsPrometheanConfig.h"
 #include "promethean/MarsPrometheanClient.h"
-#include "promethean/MarsPrometheanObject.h"
-#include "promethean/BizPrometheanObject.h"
-#include "promethean/MarsHttpStandardPrometheanObject.h"
 
 using namespace function;
 
 promethean::MarsPrometheanClient::MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject> &object,
-                                                       const std::shared_ptr<MarsPrometheanConfig> &config) {
+                                                       const std::shared_ptr<MarsPrometheanConfig> &config,
+                                                       const std::shared_ptr<skywalking::MarsSkyWalking>& apmServer_,
+                                                       const std::shared_ptr<BizPrometheanObject> &bizParser_,
+                                                       const std::shared_ptr<MarsHttpStandardPrometheanObject> &httpParser_)
+                                                       :apmServer(apmServer_),
+                                                       bizParser(bizParser_),
+                                                       httpParser(httpParser_) {
     clientFd = fd;
-    bizParser = std::make_shared<BizPrometheanObject>(object);
-    httpParser = std::make_shared<MarsHttpStandardPrometheanObject>(object);
+
     maxBufferSize = config->getClientBufferSize();
 
 }

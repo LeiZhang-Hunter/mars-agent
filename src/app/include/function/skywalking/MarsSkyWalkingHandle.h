@@ -8,12 +8,20 @@
 #include <memory>
 #include <grpcpp/grpcpp.h>
 #include "Noncopyable.h"
+#include "os/UnixThread.h"
+#include "event/Channel.h"
 #include "MarsSkyWalkingConfig.h"
+
+namespace grpc {
+    class Channel;
+}
+
 namespace function {
     namespace skywalking {
         class MarsSkyWalkingHandle : public std::enable_shared_from_this<MarsSkyWalkingHandle>, public Noncopyable {
         public:
-            MarsSkyWalkingHandle(const std::shared_ptr<MarsSkyWalkingConfig>& config_);
+            MarsSkyWalkingHandle(const std::shared_ptr<MarsSkyWalkingConfig>& config_,
+                    const std::shared_ptr<OS::UnixThread>& thread_);
 
             /**
              * 注册到skywalking的apm
@@ -21,14 +29,28 @@ namespace function {
              */
             bool reg();
 
+            /**
+             * skywalking的心跳包
+             * @return
+             */
+            bool ping();
+
         private:
             std::shared_ptr<MarsSkyWalkingConfig> config;
+
+            unsigned int serviceId;
 
             std::string instanceId;
 
             std::string uuid;
 
             std::string regString;
+
+            std::shared_ptr<OS::UnixThread> thread;
+
+            std::shared_ptr<Event::Channel> pingChannel;
+
+            std::shared_ptr<grpc::Channel> grpcChannel;
         };
     }
 }

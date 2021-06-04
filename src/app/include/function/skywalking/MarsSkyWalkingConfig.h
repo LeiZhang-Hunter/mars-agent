@@ -45,7 +45,7 @@ namespace function {
             bool enable_reg = false;
 
             //心跳时间
-            size_t heartbeat_time = 0;
+            size_t heartbeat_time = 5;
         };
     }
 }

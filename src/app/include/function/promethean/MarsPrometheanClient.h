@@ -11,7 +11,10 @@
 
 #include "event/TimingWheel.h"
 #include "event/Channel.h"
-
+#include "promethean/BizPrometheanObject.h"
+#include "promethean/MarsHttpStandardPrometheanObject.h"
+#include "promethean/MarsPrometheanObject.h"
+#include "skywalking/MarsSkyWalking.h"
 
 namespace common {
     class MarsJson;
@@ -19,23 +22,13 @@ namespace common {
 
 namespace function {
     namespace promethean {
-        class BizPrometheanObject;
-
-        class MarsHttpStandardPrometheanObject;
-
-        class MarsPrometheanObject;
-
         class MarsPrometheanClient : public std::enable_shared_from_this<MarsPrometheanClient>, public Event::TimingWheelClient {
-
-            enum {
-                REG = 0x01,
-                HTTP_STANDARD = 0x02,
-                CUSTOMER = 0x03,
-            };
-
         public:
             MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject> &object,
-                                 const std::shared_ptr<MarsPrometheanConfig> &config);
+                                 const std::shared_ptr<MarsPrometheanConfig> &config,
+                                 const std::shared_ptr<skywalking::MarsSkyWalking>& apmServer_,
+                                 const std::shared_ptr<BizPrometheanObject>& bizParser_,
+                                 const std::shared_ptr<MarsHttpStandardPrometheanObject>& httpParser_);
 
             void onRead(struct bufferevent *bev, void *ctx);
 
@@ -61,8 +54,9 @@ namespace function {
             bool runStatus = true;
             int clientFd;
             int count = 0;
-            std::shared_ptr<BizPrometheanObject> bizParser;
-            std::shared_ptr<MarsHttpStandardPrometheanObject> httpParser;
+            const std::shared_ptr<BizPrometheanObject>& bizParser;
+            const std::shared_ptr<MarsHttpStandardPrometheanObject>& httpParser;
+            const std::shared_ptr<skywalking::MarsSkyWalking>& apmServer;
             size_t maxBufferSize;
             Event::timingWheelPtr wheelPtr;
             Event::timingWheelObjectWeakPtr wheelClientWeakPtr;

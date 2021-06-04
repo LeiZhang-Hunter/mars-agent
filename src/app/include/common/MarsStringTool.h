@@ -40,6 +40,7 @@ namespace common {
             std::transform(str.begin(), str.end(), str.begin(), ::toupper);
         }
 
+        //把字符串切割成数组
         std::vector<std::string> split(const std::string& str, const std::string& delim) {
             std::vector<std::string> res;
             if("" == str) return res;

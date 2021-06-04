@@ -27,6 +27,7 @@ extern "C" {
 #include "promethean/MarsPrometheanServer.h"
 #include "promethean/MarsPrometheanHttpServer.h"
 #include "promethean/MarsPrometheanObject.h"
+#include "skywalking/MarsSkyWalking.h"
 
 using namespace function;
 using namespace std::placeholders;
@@ -44,17 +45,35 @@ promethean::MarsPromethean::MarsPromethean(const std::shared_ptr<app::NodeAgent>
         prometheanConfig->load(yamPromethean);
     }
     nodeAgent = agent;
+}
+
+void promethean::MarsPromethean::initFunction() {
+    if (checkInit()) {
+        return;
+    }
+
+    //获取skywalking的对象
+    auto skywalking = nodeAgent->getCoreModule()->getObject<skywalking::MarsSkyWalking>(SKYWALKING_MODULE_NAME);
 
     //初始化普罗米修斯对象
     promethean = std::make_shared<MarsPrometheanObject>();
+
+    //加入普罗米修斯的路由
+    std::shared_ptr<http::MarsHttpAction> action = std::make_shared<http::MarsHttpAction>();
+    std::shared_ptr<MarsPrometheanHttpServer> server = std::make_shared<MarsPrometheanHttpServer>(promethean);
+    action->setUsers(std::bind(&MarsPrometheanHttpServer::handle, server, _1, _2));
+    router->getRequest(prometheanConfig->http_path, action);
+
     //启动时间轮算法,平均分配到所有线程上去
     std::shared_ptr<OS::UnixThreadContainer> threadContainer = this->getNodeAgent()->getUnixThreadContainer();
     std::vector<std::shared_ptr<OS::UnixThread>> pool = threadContainer->getThreadPool();
-    prometheanServer = std::make_shared<MarsPrometheanServer>(threadContainer, prometheanConfig);
+    prometheanServer = std::make_shared<MarsPrometheanServer>(threadContainer, prometheanConfig, skywalking, promethean);
+
+    initConfirm();
 }
 
 void promethean::MarsPromethean::finishFunction() {
-    if (isFinish) {
+    if (checkFinish()) {
         return;
     }
 
@@ -62,16 +81,10 @@ void promethean::MarsPromethean::finishFunction() {
     prometheanServer->startTimingWheel();
     //启动域套接字监听
     loadUnixServer();
-    isFinish = true;
+    finishConfirm();
 }
 
-void promethean::MarsPromethean::initFunction() {
-    std::shared_ptr<http::MarsHttpAction> action = std::make_shared<http::MarsHttpAction>();
-    std::shared_ptr<MarsPrometheanHttpServer> server = std::make_shared<MarsPrometheanHttpServer>(promethean);
-    action->setUsers(std::bind(&MarsPrometheanHttpServer::handle, server, _1, _2));
-    router->getRequest(prometheanConfig->http_path, action);
-    isInit = true;
-}
+
 
 int promethean::MarsPromethean::loadUnixServer() {
     //检查路径是否是空的
