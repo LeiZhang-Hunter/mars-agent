@@ -13,10 +13,8 @@ namespace Event {
         }
 
         ~TimingWheelObject() {
-            std::cout << "~TimingWheelObject;user_count:" << clientPtr.use_count() << std::endl;
             clientPtr->close();
             clientPtr.reset();
-            std::cout << "~TimingWheelObject;user_count:" << clientPtr.use_count() << std::endl;
 
         }
 

@@ -5,6 +5,7 @@
 #ifndef MARS_AGENT_MARSSKYWALKING_H
 #define MARS_AGENT_MARSSKYWALKING_H
 #include <memory>
+#include <mutex>
 #include "NodeAgent.h"
 #include "os/UnixThread.h"
 #include "MarsFunctionObject.h"
@@ -30,7 +31,10 @@ namespace function {
             void initFunction();
             void finishFunction();
             void shutdownFunction();
-            std::string regSkyWalking();
+            std::string regSkyWalking(const std::string& serviceName, pid_t pid);
+            std::string getRegInfo() {
+                return appRegString;
+            }
             ~MarsSkyWalking() {
 
             }
@@ -41,6 +45,7 @@ namespace function {
             std::string appRegString;
             std::shared_ptr<MarsSkyWalkingConfig> skywalkingConfig;
             std::shared_ptr<MarsSkyWalkingHandle> grpcHandle;
+            std::mutex mu;
         };
     }
 }

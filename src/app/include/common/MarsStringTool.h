@@ -13,35 +13,35 @@
 namespace common {
     class MarsStringTool {
     public:
-        std::string leftTrimString(const std::string& strSource, const std::string& strDrop)
+        static std::string leftTrimString(const std::string& strSource, const std::string& strDrop)
         {
             std::string strDstString(strSource);
             return strDstString.erase(0, strDstString.find_first_not_of(strDrop));
         }
 
-        std::string rightTrimString(const std::string& strSource, const std::string& strDrop)
+        static std::string rightTrimString(const std::string& strSource, const std::string& strDrop)
         {
             std::string strDstString(strSource);
             return strDstString.erase(strDstString.find_last_not_of(strDrop) + 1);
         }
 
-        std::string trimString(const std::string& strSource, const std::string& strDrop)
+        static std::string trimString(const std::string& strSource, const std::string& strDrop)
         {
             return leftTrimString(rightTrimString(strSource, strDrop), strDrop);
         }
 
-        void strTolower(std::string& str)
+        static void strTolower(std::string& str)
         {
             std::transform(str.begin(), str.end(), str.begin(), ::tolower);
         }
 
-        void strToUpper(std::string& str)
+        static void strToUpper(std::string& str)
         {
             std::transform(str.begin(), str.end(), str.begin(), ::toupper);
         }
 
         //把字符串切割成数组
-        std::vector<std::string> split(const std::string& str, const std::string& delim) {
+        static std::vector<std::string> split(const std::string& str, const std::string& delim) {
             std::vector<std::string> res;
             if("" == str) return res;
             //先将要切割的字符串从string类型转换为char*类型

@@ -54,9 +54,7 @@ namespace function {
             //获取错误码对应的值的含义
             std::string income(int responseCode);
 
-            std::shared_ptr<common::MarsJson> jsonParser;
             std::shared_ptr<promethean::MarsPrometheanObject> prometheanObject;
-            std::shared_ptr<common::MarsStringTool> stringParser;
             prometheus::Histogram::BucketBoundaries httpServerRTBucketInfo = {0.001, 0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1, 5, 10, 20};
             prometheus::Histogram::BucketBoundaries httpServerRequestSizeBucketInfo = {1000, 3000, 5000, 7000, 10000, 15000};
         };

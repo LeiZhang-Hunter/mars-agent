@@ -14,8 +14,6 @@ using namespace function;
 promethean::MarsHttpStandardPrometheanObject::MarsHttpStandardPrometheanObject(
         const std::shared_ptr<promethean::MarsPrometheanObject> &object) {
     prometheanObject = object;
-    jsonParser = std::make_shared<common::MarsJson>();
-    stringParser = std::make_shared<common::MarsStringTool>();
 }
 
 bool promethean::MarsHttpStandardPrometheanObject::parseAppInfo(AppInfo &appInfo, const Json::Value& jsonData) {
@@ -162,7 +160,7 @@ void promethean::MarsHttpStandardPrometheanObject::parser(const std::string &con
 
     Json::Value httpProtocol;
     try {
-        jsonParser->jsonDecode(content, &httpProtocol);
+        common::MarsJson::jsonDecode(content, &httpProtocol);
     } catch (std::exception& err) {
         std::cout << err.what() << std::endl;
         return;
@@ -210,7 +208,7 @@ void promethean::MarsHttpStandardPrometheanObject::parser(const std::string &con
         serverRequestSizeHistogramHandle.Observe(static_cast<double >(appInfo.body.responseSize));
     } else {
         //客户端要切割url
-        std::vector<std::string> pathInfo = stringParser->split(appInfo.body.url, "?");
+        std::vector<std::string> pathInfo = common::MarsStringTool::split(appInfo.body.url, "?");
         if (pathInfo.empty()) {
             labels["uri"] = "";
         } else {

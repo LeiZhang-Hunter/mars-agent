@@ -68,7 +68,6 @@ void *OS::UnixThread::ThreadProc(void *arg) {
 bool OS::UnixThread::Start() {
     //队列
     queue = std::make_shared<Event::EventQueue>(shared_from_this());
-    std::cout << wakeupChannelFd << std::endl;
     if (wakeupChannelFd != -1) {
         channel = std::make_shared<Event::Channel>(loop, wakeupChannelFd);
         channel->setEvents(EV_PERSIST);

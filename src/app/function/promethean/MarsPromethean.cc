@@ -52,9 +52,6 @@ void promethean::MarsPromethean::initFunction() {
         return;
     }
 
-    //获取skywalking的对象
-    auto skywalking = nodeAgent->getCoreModule()->getObject<skywalking::MarsSkyWalking>(SKYWALKING_MODULE_NAME);
-
     //初始化普罗米修斯对象
     promethean = std::make_shared<MarsPrometheanObject>();
 
@@ -64,11 +61,6 @@ void promethean::MarsPromethean::initFunction() {
     action->setUsers(std::bind(&MarsPrometheanHttpServer::handle, server, _1, _2));
     router->getRequest(prometheanConfig->http_path, action);
 
-    //启动时间轮算法,平均分配到所有线程上去
-    std::shared_ptr<OS::UnixThreadContainer> threadContainer = this->getNodeAgent()->getUnixThreadContainer();
-    std::vector<std::shared_ptr<OS::UnixThread>> pool = threadContainer->getThreadPool();
-    prometheanServer = std::make_shared<MarsPrometheanServer>(threadContainer, prometheanConfig, skywalking, promethean);
-
     initConfirm();
 }
 
@@ -76,6 +68,13 @@ void promethean::MarsPromethean::finishFunction() {
     if (checkFinish()) {
         return;
     }
+    //获取skywalking的对象
+    auto skywalking = nodeAgent->getCoreModule()->getObject<skywalking::MarsSkyWalking>(SKYWALKING_MODULE_NAME);
+
+    //启动时间轮算法,平均分配到所有线程上去
+    std::shared_ptr<OS::UnixThreadContainer> threadContainer = getNodeAgent()->getUnixThreadContainer();
+    std::vector<std::shared_ptr<OS::UnixThread>> pool = threadContainer->getThreadPool();
+    prometheanServer = std::make_shared<MarsPrometheanServer>(threadContainer, prometheanConfig, skywalking, promethean);
 
     //初始化时间轮
     prometheanServer->startTimingWheel();

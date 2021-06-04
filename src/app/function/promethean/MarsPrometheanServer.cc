@@ -24,7 +24,7 @@ promethean::MarsPrometheanServer::MarsPrometheanServer(const std::shared_ptr<OS:
                                                        const std::shared_ptr<skywalking::MarsSkyWalking>& apmServer_,
                                                        const std::shared_ptr<MarsPrometheanObject>& promethean_)
                                                        : apmServer(apmServer_), container(container_), config(config_),
-                                                       promethean(promethean_){
+                                                       promethean(promethean_) {
     bizParser = std::make_shared<BizPrometheanObject>(promethean);
     httpParser = std::make_shared<MarsHttpStandardPrometheanObject>(promethean);
 }
@@ -72,12 +72,6 @@ void promethean::MarsPrometheanServer::bindClient(int fd,
         promethean::MarsPromethean *promethean,
         const std::shared_ptr<OS::UnixThread>& thread) {
     std::shared_ptr<Event::Channel> channel = std::make_shared<Event::Channel>(thread->getEventLoop(), fd);
-    //创建一个unix客户端
-//    MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject> &object,
-//    const std::shared_ptr<MarsPrometheanConfig> &config,
-//    const std::shared_ptr<MarsPrometheanConfig> &apmServer_,
-//    const std::shared_ptr<BizPrometheanObject>& bizParser_,
-//    const std::shared_ptr<MarsHttpStandardPrometheanObject>& httpParser_);
     std::shared_ptr<MarsPrometheanClient> prometheanClient =
             std::make_shared<MarsPrometheanClient>
             (fd,

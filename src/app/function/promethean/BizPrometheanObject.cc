@@ -14,8 +14,7 @@ void promethean::BizPrometheanObject::parser(const std::string& content) {
     char bizData[content.length()];
     sscanf(content.c_str(), "[RIG:BIZ]=%s\n", bizData);
     Json::Value prometheanJsonObject;
-    jsonParser->jsonDecode(bizData, &prometheanJsonObject);
-    std::cout << prometheanJsonObject << std::endl;
+    common::MarsJson::jsonDecode(bizData, &prometheanJsonObject);
     //名字必须存在
     if (!prometheanJsonObject["name"]) {
         std::cout << "name empty" << std::endl;
@@ -192,7 +191,6 @@ void promethean::BizPrometheanObject::loadHistogramConfig(std::vector<double>& h
     auto iter = bucketVector.begin();
     for(; iter != bucketVector.end(); iter++) {
         double value = static_cast<double >(atof(iter->c_str()));
-        std::cout << value << std::endl;
         if (value > 0) {
             histogramBucket.push_back(value);
         }

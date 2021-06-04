@@ -27,13 +27,28 @@ namespace function {
              * 注册到skywalking的apm
              * @return
              */
-            bool reg();
+            bool reg(const std::string& serviceName);
 
             /**
              * skywalking的心跳包
              * @return
              */
             bool ping();
+
+            std::string getRegToken()
+            {
+                return regString;
+            }
+
+            std::string getInstanceId()
+            {
+                return instanceId;
+            }
+
+            std::string getUuid()
+            {
+                return uuid;
+            }
 
         private:
             std::shared_ptr<MarsSkyWalkingConfig> config;

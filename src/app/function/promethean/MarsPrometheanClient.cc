@@ -6,7 +6,7 @@ extern "C" {
 #include <event.h>
 }
 #include <string>
-
+#include <mutex>
 #include <iostream>
 #include "os/UnixCurrentThread.h"
 #include "common/MarsJson.h"
@@ -24,9 +24,7 @@ promethean::MarsPrometheanClient::MarsPrometheanClient(int fd, const std::shared
                                                        bizParser(bizParser_),
                                                        httpParser(httpParser_) {
     clientFd = fd;
-
     maxBufferSize = config->getClientBufferSize();
-
 }
 
 void promethean::MarsPrometheanClient::setWheelPtr(const Event::timingWheelPtr &wheelPtr_) {
@@ -38,7 +36,6 @@ void promethean::MarsPrometheanClient::setWheelPtr(const Event::timingWheelPtr &
         wheelPtr->add(wheelObject);
     }
     return;
-//    shared_ptr<function::promethean::timingWheelClientObjectStruct>
 }
 
 void promethean::MarsPrometheanClient::onRead(struct bufferevent *bev, void *ctx) {
@@ -60,9 +57,8 @@ void promethean::MarsPrometheanClient::onRead(struct bufferevent *bev, void *ctx
 
         msg[readSize] = '\0';
         std::string data(msg);
-        parse(data);
+        parse(bev, ctx, data);
     }
-    std::cout << count << std::endl;
 }
 
 void promethean::MarsPrometheanClient::onClose(struct bufferevent *bev, Event::Channel *channel) {
@@ -76,8 +72,6 @@ void promethean::MarsPrometheanClient::onClose(struct bufferevent *bev, Event::C
         wheelPtr->clear(wheelObject);
         wheelObject.reset();
     }
-
-
 }
 
 void promethean::MarsPrometheanClient::close() {
@@ -88,10 +82,70 @@ void promethean::MarsPrometheanClient::close() {
         loop->deleteChannelByFd(clientFd);
         clientFd = 0;
     }
-    std::cout << "use_count:" << shared_from_this().use_count() << std::endl;
 }
 
-void promethean::MarsPrometheanClient::parse(std::string &data) {
+void promethean::MarsPrometheanClient::reg(struct bufferevent *bev, void *ctx, const std::string& content) {
+
+    std::string regInfo = apmServer->getRegInfo();
+    if (!regInfo.empty()) {
+        bufferevent_write(bev, regInfo.c_str(), regInfo.length());
+        return;
+    }
+
+    Json::Value registerProtocol;
+
+    try {
+        common::MarsJson::jsonDecode(content, &registerProtocol);
+    } catch (std::exception& err) {
+        std::cout << err.what() << std::endl;
+        return;
+    }
+
+    std::string appCode;
+    try {
+        appCode = registerProtocol["app_code"].asString();
+    } catch (std::exception& err) {
+        std::cout << err.what() << std::endl;
+        return;
+    }
+
+    pid_t pid = 0;
+    try {
+        pid = registerProtocol["pid"].asUInt();
+    } catch (std::exception& err) {
+        std::cout << err.what() << std::endl;
+        return;
+    }
+
+    try {
+        std::string url = registerProtocol["url"].asString();
+    } catch (std::exception& err) {
+        std::cout << err.what() << std::endl;
+        return;
+    }
+
+    try {
+        std::string version = registerProtocol["version"].asString();
+    } catch (std::exception& err) {
+        std::cout << err.what() << std::endl;
+        return;
+    }
+    //确实是否有已经生成成功
+    regInfo = apmServer->getRegInfo();
+    if (!regInfo.empty()) {
+        bufferevent_write(bev, regInfo.c_str(), regInfo.length());
+        return;
+    }
+
+    regInfo = apmServer->regSkyWalking(appCode, pid);
+    if (!regInfo.empty()) {
+        bufferevent_write(bev, regInfo.c_str(), regInfo.length());
+        return;
+    }
+    bufferevent_write(bev, regInfo.c_str(), regInfo.length());
+}
+
+void promethean::MarsPrometheanClient::parse(struct bufferevent *bev, void *ctx, std::string &data) {
 
     if (buffer.empty()) {
         buffer = data;
@@ -129,12 +183,10 @@ void promethean::MarsPrometheanClient::parse(std::string &data) {
         char action = content[0];
         content = (content.c_str() + 1);
 
-//        Json::Value prometheanValue;
-//        //对json进行编码
-//        jsonTool->jsonDecode(content, &prometheanValue);
         //检查第一个字节
         switch (action) {
             case '0':
+                reg(bev, ctx, content);
                 break;
             case '1':
                 httpParser->parser(content);

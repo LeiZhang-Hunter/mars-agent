@@ -12,10 +12,10 @@ namespace common {
     class MarsJson {
     public:
         //解码json
-        bool jsonDecode(const std::string& strJsonMess, Json::Value *root);
+        static bool jsonDecode(const std::string& strJsonMess, Json::Value *root);
 
         //编码json
-        Json::String jsonEncode(Json::Value proto_value);
+        static Json::String jsonEncode(Json::Value proto_value);
     };
 }
 #endif //MARS_AGENT_MARSJSON_H

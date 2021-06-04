@@ -27,7 +27,7 @@ skywalking::MarsSkyWalkingHandle::MarsSkyWalkingHandle(const std::shared_ptr<Mar
 }
 
 
-bool skywalking::MarsSkyWalkingHandle::reg() {
+bool skywalking::MarsSkyWalkingHandle::reg(const std::string& serviceName) {
     ChannelArguments args;
     grpcChannel =  CreateCustomChannel(
             config->getGrpcAddress(), grpc::InsecureChannelCredentials(), args);
@@ -39,7 +39,7 @@ bool skywalking::MarsSkyWalkingHandle::reg() {
 
     //设置服务的名字
     Service* apmServices = services.add_services();
-    apmServices->set_servicename("mars");
+    apmServices->set_servicename(serviceName);
 
     //设置语言类型
     KeyStringValuePair pair ;

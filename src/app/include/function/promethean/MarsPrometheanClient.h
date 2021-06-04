@@ -38,7 +38,7 @@ namespace function {
 
             void onClose(struct bufferevent *bev, Event::Channel *ctx);
 
-            void parse(std::string &msg);
+
 
             void setWheelPtr(const Event::timingWheelPtr &wheelPtr_);
 
@@ -49,6 +49,10 @@ namespace function {
 
             void close();
         private:
+            //解析协议
+            void parse(struct bufferevent *bev, void *ctx, std::string &msg);
+            //注册
+            void reg(struct bufferevent *bev, void *ctx, const std::string& content);
 
             std::string buffer;
             bool runStatus = true;

@@ -31,7 +31,6 @@ namespace Event {
             if (circularBuffer.size() == capacity_) {
                 circularBuffer.pop_front();
             }
-            std::cout << "move" << std::endl;
         }
 
         size_t size() {
@@ -40,8 +39,6 @@ namespace Event {
 
         void add(const timingWheelObjectPtr& ptr) {
             circularBuffer.back().insert(ptr);
-            std::cout << "add tid:" << OS::UnixCurrentThread::tid()
-            << "use_count:" << ptr.use_count() << std::endl;
         }
 
         size_t capacity() {

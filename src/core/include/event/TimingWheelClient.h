@@ -14,7 +14,6 @@ namespace Event {
         }
 
         ~TimingWheelClient() {
-            std::cout << "~TimingWheelClient" << std::endl;
         }
     };
 }

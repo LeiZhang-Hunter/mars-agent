@@ -81,7 +81,6 @@ void Event::EventLoop::onEvent(bufferevent* ev, short flag, void* arg) {
 }
 
 bool Event::EventLoop::eventSet(const std::shared_ptr<Channel>& channel) {
-    std::cout << "eventSet" << std::endl;
     //
     //添加新事件
     struct bufferevent *client;
@@ -95,7 +94,6 @@ bool Event::EventLoop::eventSet(const std::shared_ptr<Channel>& channel) {
         time.tv_usec = channel->getTimer().tv_usec;
         bufferevent_set_timeouts(client, &time, nullptr);
     }
-    std::cout << channel->getChannelFd() << std::endl;
     bufferevent_setcb (client, onRead, onWrite, onEvent,  static_cast<void *>(channel.get()));
     bufferevent_enable (client, channel->getEvents());
     return !ret;

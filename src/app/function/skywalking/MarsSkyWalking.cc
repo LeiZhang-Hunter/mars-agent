@@ -28,7 +28,7 @@ void skywalking::MarsSkyWalking::initFunction() {
         return;
     }
 
-    grpcHandle->reg();
+//
     //启动一个grpc线程，因为grpc是同步的
     thread->Start();
     initConfirm();
@@ -42,10 +42,27 @@ void skywalking::MarsSkyWalking::finishFunction() {
     finishConfirm();
 }
 
-std::string skywalking::MarsSkyWalking::regSkyWalking()
+std::string skywalking::MarsSkyWalking::regSkyWalking(const std::string& serviceName, pid_t pid)
 {
-//    thread->addTask();
-    return "";
+    if (!appRegString.empty()) {
+        return appRegString;
+    }
+
+    mu.lock();
+    if (!appRegString.empty()) {
+        return appRegString;
+    }
+    bool res = grpcHandle->reg(serviceName);
+    if (!res) {
+        return "";
+    }
+    char pidStr[25];
+    //这里使用sprintf
+    sprintf(pidStr, "%u", pid);
+    appRegString += (grpcHandle->getInstanceId() + ",");
+    appRegString += (pidStr);
+    appRegString += ("," + grpcHandle->getUuid());
+    return appRegString;
 }
 
 
