@@ -37,6 +37,16 @@ mars:
       wheel_idle_time: 480
       wheel_check_interval: 60,
       max_connection: 1000
+    # apollo客户端
+    apollo:
+      api: "127.0.0.1:8070"
+      server: 127.0.0.1
+      port: 8080
+      app:
+        - appId: "ugcaudit-nweb-api"
+          cluster: "default"
+          localNamespaces: ["application"]
+          env: "dev"
 
   extension:
 

@@ -61,7 +61,7 @@ namespace app {
          */
         void init(const std::shared_ptr<Event::EventLoop> &threadLoop);
 
-        std::shared_ptr<config::MarsConfig> getMarsConfig() {
+        std::shared_ptr<config::MarsConfig>& getMarsConfig() {
             return marsConfig;
         }
 

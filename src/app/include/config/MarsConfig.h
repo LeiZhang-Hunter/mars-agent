@@ -52,7 +52,7 @@ namespace config {
             return marsHttpTimeout;
         }
 
-        YAML::Node getYamlCore() {
+        YAML::Node& getYamlCore() {
             return yamlCore;
         }
 

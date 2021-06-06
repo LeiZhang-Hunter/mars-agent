@@ -33,18 +33,22 @@ using namespace function;
 using namespace std::placeholders;
 
 promethean::MarsPromethean::MarsPromethean(const std::shared_ptr<app::NodeAgent> &agent) {
-    std::shared_ptr<config::MarsConfig> marsConfig = agent->getMarsConfig();
+    std::shared_ptr<config::MarsConfig>& marsConfig = agent->getMarsConfig();
     if (!agent) {
         return;
     }
+    nodeAgent = agent;
     router = agent->getCoreModule()->getObject<http::MarsHttp>(HTTP_MODULE_NAME)->getRouter();
     prometheanConfig = std::make_shared<MarsPrometheanConfig>();
-    //加载配置
-    auto yamPromethean = marsConfig->getYamlCore()[PROMETHEAN_MODULE_NAME];
-    if (yamPromethean) {
-        prometheanConfig->load(yamPromethean);
+    try {
+        //加载配置
+        auto &yamPromethean = marsConfig->getYamlCore();
+        if (yamPromethean) {
+            prometheanConfig->load(yamPromethean[PROMETHEAN_MODULE_NAME]);
+        }
+    } catch (std::exception& err) {
+        std::cerr << err.what() << std::endl;
     }
-    nodeAgent = agent;
 }
 
 void promethean::MarsPromethean::initFunction() {

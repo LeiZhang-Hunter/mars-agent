@@ -7,7 +7,7 @@
 using namespace function;
 
 skywalking::MarsSkyWalking::MarsSkyWalking(const std::shared_ptr<app::NodeAgent> &agent) {
-    std::shared_ptr<config::MarsConfig> marsConfig = agent->getMarsConfig();
+    std::shared_ptr<config::MarsConfig>& marsConfig = agent->getMarsConfig();
     thread = std::make_shared<OS::UnixThread>();
     skywalkingConfig = std::make_shared<MarsSkyWalkingConfig>();
     try {

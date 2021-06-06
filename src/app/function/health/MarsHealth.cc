@@ -20,7 +20,7 @@ MarsHealth::MarsHealth(const std::shared_ptr<app::NodeAgent> &agent) {
     }
     router = agent->getCoreModule()->getObject<http::MarsHttp>(HTTP_MODULE_NAME)->getRouter();
     //加载配置
-    std::shared_ptr<config::MarsConfig> marsConfig = agent->getMarsConfig();
+    std::shared_ptr<config::MarsConfig>& marsConfig = agent->getMarsConfig();
     loadConfig(marsConfig->getYamlCore());
 }
 
@@ -43,7 +43,7 @@ void MarsHealth::shutdownFunction() {
 }
 
 bool MarsHealth::loadConfig(const YAML::Node& yamlConfig) {
-    auto yamlHealth = yamlConfig[HEALTH_MODULE_NAME];
+    auto& yamlHealth = yamlConfig[HEALTH_MODULE_NAME];
     if (!yamlHealth) {
         return false;
     }

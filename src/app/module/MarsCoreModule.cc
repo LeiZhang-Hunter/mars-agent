@@ -4,11 +4,12 @@
 #include <memory>
 #include "NodeAgent.h"
 #include "module/MarsCoreModule.h"
-#include "function/container/MarsFunctionContainer.h"
-#include "function/http/MarsHttp.h"
-#include "function/health/MarsHealth.h"
+#include "http/MarsHttp.h"
+#include "apollo/MarsApollo.h"
+#include "health/MarsHealth.h"
 #include "promethean/MarsPromethean.h"
 #include "skywalking/MarsSkyWalking.h"
+#include "container/MarsFunctionContainer.h"
 
 using namespace module;
 using namespace function;
@@ -19,7 +20,8 @@ MarsCoreModule::MarsCoreModule(const std::shared_ptr<app::NodeAgent> &agent) {
 }
 
 void MarsCoreModule::loadApollo() {
-
+    std::shared_ptr<apollo::MarsApollo> apollo = std::make_shared<apollo::MarsApollo>(nodeAgent);
+    container->bind(apolloModuleName, apollo);
 }
 
 void MarsCoreModule::loadEureka() {

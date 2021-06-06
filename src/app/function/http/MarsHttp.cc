@@ -31,7 +31,7 @@ using namespace function::http;
 using namespace std::placeholders;
 
 MarsHttp::MarsHttp(const std::shared_ptr<app::NodeAgent> &agent) {
-    std::shared_ptr<config::MarsConfig> marsConfig = agent->getMarsConfig();
+    std::shared_ptr<config::MarsConfig>& marsConfig = agent->getMarsConfig();
     httpIp = marsConfig->getHttpIp();
     httpPort = static_cast<short>(marsConfig->getHttpPort());
     bindLoop = agent->getLoop();
