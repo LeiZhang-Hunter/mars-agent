@@ -63,15 +63,27 @@ promethean::MarsPrometheanServer::prometheanCbListener(struct evconnlistener *li
     auto *promethean = (promethean::MarsPromethean *) ptr;
     auto server = promethean->getUnixServer();
     std::shared_ptr<OS::UnixThread> thread = promethean->getNodeAgent()->getUnixThreadContainer()->getRandThread();
-
+    std::cout << connection << std::endl;
+    if (connection == promethean->getConfig()->getMaxConnection()) {
+        ::close(fd);
+        return;
+    }
     //绑定线程
     thread->addTask(std::bind(&MarsPrometheanServer::bindClient, server, fd, promethean, thread));
+
+    connection++;
 }
 
 void promethean::MarsPrometheanServer::bindClient(int fd,
         promethean::MarsPromethean *promethean,
         const std::shared_ptr<OS::UnixThread>& thread) {
     std::shared_ptr<Event::Channel> channel = std::make_shared<Event::Channel>(thread->getEventLoop(), fd);
+    //加入到时间轮
+    auto iter = this->wheelMap.find(thread->getTid());
+    if (iter == this->wheelMap.end()) {
+        std::cerr << "thread_id:" << thread->getTid() << ";" << "timing wheel not found" << std::endl;
+        return;
+    }
     std::shared_ptr<MarsPrometheanClient> prometheanClient =
             std::make_shared<MarsPrometheanClient>
             (fd,
@@ -79,14 +91,12 @@ void promethean::MarsPrometheanServer::bindClient(int fd,
              promethean->getConfig(),
              apmServer,
              bizParser,
-             httpParser);
+             httpParser,
+             iter->second);
     channel->setOnReadCallable((std::bind(&MarsPrometheanClient::onRead, prometheanClient, _1, _2)));
     channel->setOnCloseCallable((std::bind(&MarsPrometheanClient::onClose, prometheanClient, _1, _2)));
-    //加入到时间轮
-    auto iter = this->wheelMap.find(thread->getTid());
-    if (iter != this->wheelMap.end()) {
-        prometheanClient->setWheelPtr(iter->second);
-    }
+
+
     //派发事件
     channel->enableReading(-1);
 }

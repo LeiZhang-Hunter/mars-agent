@@ -12,6 +12,7 @@ extern "C" {
 #include "common/MarsJson.h"
 #include "promethean/MarsPrometheanConfig.h"
 #include "promethean/MarsPrometheanClient.h"
+#include "promethean/MarsPrometheanServer.h"
 
 using namespace function;
 
@@ -19,23 +20,14 @@ promethean::MarsPrometheanClient::MarsPrometheanClient(int fd, const std::shared
                                                        const std::shared_ptr<MarsPrometheanConfig> &config,
                                                        const std::shared_ptr<skywalking::MarsSkyWalking>& apmServer_,
                                                        const std::shared_ptr<BizPrometheanObject> &bizParser_,
-                                                       const std::shared_ptr<MarsHttpStandardPrometheanObject> &httpParser_)
+                                                       const std::shared_ptr<MarsHttpStandardPrometheanObject> &httpParser_,
+                                                       const Event::timingWheelPtr& wheelPtr_)
                                                        :apmServer(apmServer_),
                                                        bizParser(bizParser_),
-                                                       httpParser(httpParser_) {
+                                                       httpParser(httpParser_),
+                                                       wheelPtr(wheelPtr_) {
     clientFd = fd;
     maxBufferSize = config->getClientBufferSize();
-}
-
-void promethean::MarsPrometheanClient::setWheelPtr(const Event::timingWheelPtr &wheelPtr_) {
-    wheelPtr = wheelPtr_;
-    {
-        Event::timingWheelObjectPtr wheelObject(new Event::TimingWheelObject(shared_from_this()));
-        Event::timingWheelObjectWeakPtr weakPtr(wheelObject);
-        wheelClientWeakPtr = weakPtr;
-        wheelPtr->add(wheelObject);
-    }
-    return;
 }
 
 void promethean::MarsPrometheanClient::onRead(struct bufferevent *bev, void *ctx) {
@@ -47,14 +39,13 @@ void promethean::MarsPrometheanClient::onRead(struct bufferevent *bev, void *ctx
             wheelPtr->add(wheelObject);
         }
     }
-
-    while (runStatus) {
-        size_t readSize = bufferevent_read(bev, &msg, 2);
-
+    size_t left_len = evbuffer_get_length(bufferevent_get_input(bev));
+    while (left_len) {
+        size_t readSize = bufferevent_read(bev, &msg, BUFSIZ);
         //数据读完了
         if (readSize <= 0)
             break;
-
+        left_len -= readSize;
         msg[readSize] = '\0';
         std::string data(msg);
         parse(bev, ctx, data);
@@ -85,8 +76,8 @@ void promethean::MarsPrometheanClient::close() {
 }
 
 void promethean::MarsPrometheanClient::reg(struct bufferevent *bev, void *ctx, const std::string& content) {
-
     std::string regInfo = apmServer->getRegInfo();
+    regInfo = "a,b,c";
     if (!regInfo.empty()) {
         bufferevent_write(bev, regInfo.c_str(), regInfo.length());
         return;
@@ -204,4 +195,10 @@ void promethean::MarsPrometheanClient::parse(struct bufferevent *bev, void *ctx,
             break;
         }
     }
+}
+
+promethean::MarsPrometheanClient::~MarsPrometheanClient() {
+    promethean::connection--;
+    std::cout << "~MarsPrometheanClient" << std::endl;
+    buffer.clear();
 }

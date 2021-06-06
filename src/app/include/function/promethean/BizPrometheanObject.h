@@ -14,8 +14,8 @@ namespace function {
     namespace promethean {
         class BizPrometheanObject {
         public:
-            BizPrometheanObject(const std::shared_ptr<promethean::MarsPrometheanObject> &object) {
-                prometheanObject = object;
+            BizPrometheanObject(const std::shared_ptr<promethean::MarsPrometheanObject> &object):prometheanObject(object) {
+
             }
 
             void parser(const std::string &content);
@@ -34,7 +34,7 @@ namespace function {
             void loadHistogramConfig(std::vector<double> &histogramBucket,
                                      const Json::Value &config);
 
-            std::shared_ptr<promethean::MarsPrometheanObject> prometheanObject;
+            const std::shared_ptr<promethean::MarsPrometheanObject>& prometheanObject;
             common::MarsStringTool stringParser;
         };
     }

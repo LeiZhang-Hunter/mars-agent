@@ -35,6 +35,10 @@ namespace function {
                 return checkInterval;
             }
 
+            long getMaxConnection() {
+                return maxConnection;
+            };
+
         private:
             //客户端缓冲区的最大长度
             size_t clientMaxBuffer = 65535;
@@ -44,6 +48,8 @@ namespace function {
 
             //轮盘的大小
             size_t checkInterval = 60;
+
+            long maxConnection = 600;
         };
     }
 }

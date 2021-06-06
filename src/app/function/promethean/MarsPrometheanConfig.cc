@@ -37,4 +37,10 @@ void MarsPrometheanConfig::load(const YAML::Node &node) {
     } catch (std::exception& err) {
         std::cerr << err.what() << std::endl;
     }
+
+    try {
+        maxConnection = node["max_connection"].as<uint64_t>();
+    } catch (std::exception& err) {
+        std::cerr << err.what() << std::endl;
+    }
 }

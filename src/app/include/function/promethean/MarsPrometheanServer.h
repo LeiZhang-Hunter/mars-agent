@@ -27,6 +27,7 @@ extern "C" {
 #include "skywalking/MarsSkyWalking.h"
 namespace function {
     namespace promethean {
+        class MarsPromethean;
         class MarsPrometheanConfig;
         class MarsPrometheanClient;
         class BizPrometheanObject;

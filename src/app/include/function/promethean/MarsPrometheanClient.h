@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_set>
+#include <atomic>
 
 #include "event/TimingWheel.h"
 #include "event/Channel.h"
@@ -22,13 +23,16 @@ namespace common {
 
 namespace function {
     namespace promethean {
+        static std::atomic_llong connection{ 0 };//原子数据类型
+
         class MarsPrometheanClient : public std::enable_shared_from_this<MarsPrometheanClient>, public Event::TimingWheelClient {
         public:
             MarsPrometheanClient(int fd, const std::shared_ptr<MarsPrometheanObject> &object,
                                  const std::shared_ptr<MarsPrometheanConfig> &config,
                                  const std::shared_ptr<skywalking::MarsSkyWalking>& apmServer_,
                                  const std::shared_ptr<BizPrometheanObject>& bizParser_,
-                                 const std::shared_ptr<MarsHttpStandardPrometheanObject>& httpParser_);
+                                 const std::shared_ptr<MarsHttpStandardPrometheanObject>& httpParser_,
+                                 const Event::timingWheelPtr& wheelPtr_);
 
             void onRead(struct bufferevent *bev, void *ctx);
 
@@ -38,16 +42,11 @@ namespace function {
 
             void onClose(struct bufferevent *bev, Event::Channel *ctx);
 
-
-
-            void setWheelPtr(const Event::timingWheelPtr &wheelPtr_);
-
-            ~MarsPrometheanClient() {
-                std::cout << "~MarsPrometheanClient" << std::endl;
-                buffer.clear();
-            }
+            ~MarsPrometheanClient();
 
             void close();
+
+
         private:
             //解析协议
             void parse(struct bufferevent *bev, void *ctx, std::string &msg);
@@ -62,7 +61,7 @@ namespace function {
             const std::shared_ptr<MarsHttpStandardPrometheanObject>& httpParser;
             const std::shared_ptr<skywalking::MarsSkyWalking>& apmServer;
             size_t maxBufferSize;
-            Event::timingWheelPtr wheelPtr;
+            const Event::timingWheelPtr& wheelPtr;
             Event::timingWheelObjectWeakPtr wheelClientWeakPtr;
         };
     }

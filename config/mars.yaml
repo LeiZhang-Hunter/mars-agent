@@ -1,5 +1,5 @@
 mars:
-  worker_number: 4
+  worker_number: 1
   pid_file: /data/www-data/yaml.pid
   #mars的核心功能健康检查
   core:
@@ -35,7 +35,8 @@ mars:
       unix_client_max_buffer: 65535
       http_path: /metrics
       wheel_idle_time: 480
-      wheel_check_interval: 60
+      wheel_check_interval: 60,
+      max_connection: 1000
 
   extension:
 
