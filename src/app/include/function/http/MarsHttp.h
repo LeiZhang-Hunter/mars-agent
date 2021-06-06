@@ -39,7 +39,7 @@ namespace function {
 
             void shutdownFunction();
 
-            std::shared_ptr<MarsHttpRouter> getRouter() {
+            std::shared_ptr<MarsHttpRouter>& getRouter() {
                 return routerHandle;
             }
 

@@ -25,6 +25,7 @@ void http_request_done(struct evhttp_request *req, void *arg) {
     evhttp_connection_free(response->connection);
     response->destroy();
 }
+
 MarsHttpServerHealth::MarsHttpServerHealth(const std::string &ip, short health_port,
         const std::string &health_path,
         const std::string& health_host, unsigned int health_timeout) {

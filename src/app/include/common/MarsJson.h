@@ -15,7 +15,7 @@ namespace common {
         static bool jsonDecode(const std::string& strJsonMess, Json::Value *root);
 
         //编码json
-        static Json::String jsonEncode(Json::Value proto_value);
+        static Json::String jsonEncode(const Json::Value& proto_value);
     };
 }
 #endif //MARS_AGENT_MARSJSON_H

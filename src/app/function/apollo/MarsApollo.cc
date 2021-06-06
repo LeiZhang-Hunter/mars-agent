@@ -13,12 +13,31 @@ apollo::MarsApollo::MarsApollo(const std::shared_ptr<app::NodeAgent> &agent)
     }
     std::shared_ptr<config::MarsConfig>& marsConfig = agent->getMarsConfig();
     //加载配置
-    YAML::Node& apolloNode = marsConfig->getYamlCore();
+    YAML::Node apolloNode;
     try {
-        apolloNode = apolloNode[APOLLO_MODULE_NAME];
+        apolloNode = marsConfig->getYamlCore()[APOLLO_MODULE_NAME];
     } catch (std::exception& err) {
         std::cerr << err.what() << std::endl;
         return;
     }
     apolloConfig->load(apolloNode);
+    apolloClient = std::make_shared<MarsApolloClient>(apolloConfig);
+}
+
+void apollo::MarsApollo::initFunction() {
+    if (checkInit()) {
+        return;
+    }
+
+    apolloClient->run();
+
+    initConfirm();
+}
+
+void apollo::MarsApollo::finishFunction() {
+
+}
+
+void apollo::MarsApollo::shutdownFunction() {
+
 }

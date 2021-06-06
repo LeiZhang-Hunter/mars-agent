@@ -108,7 +108,7 @@ void MarsHttp::httpRequestHandle(struct evhttp_request *request, void *args) {
     }
 
     //初始化路由
-    std::shared_ptr<MarsHttpRouter> router = httpDispatcher->getRouter();
+    std::shared_ptr<MarsHttpRouter>& router = httpDispatcher->getRouter();
     const struct evhttp_uri *evhttp_uri = evhttp_request_get_evhttp_uri(request);
     char url[8192];
     evhttp_uri_join(const_cast<struct evhttp_uri *>(evhttp_uri), url, 8192);
@@ -119,6 +119,7 @@ void MarsHttp::httpRequestHandle(struct evhttp_request *request, void *args) {
     //查找路由
     std::shared_ptr<MarsHttpAction> action = router->dispatch(httpDispatcher->getHttpRequestType(request->type), url);
     if (!action) {
+        std::cerr << "action not found" << std::endl;
         response->response(HTTP_NOTFOUND, "");
         return;
     }

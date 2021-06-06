@@ -32,13 +32,13 @@ extern "C" {
 using namespace function;
 using namespace std::placeholders;
 
-promethean::MarsPromethean::MarsPromethean(const std::shared_ptr<app::NodeAgent> &agent) {
+promethean::MarsPromethean::MarsPromethean(const std::shared_ptr<app::NodeAgent> &agent) : router(
+        agent->getCoreModule()->getObject<http::MarsHttp>(HTTP_MODULE_NAME)->getRouter()) {
     std::shared_ptr<config::MarsConfig>& marsConfig = agent->getMarsConfig();
     if (!agent) {
         return;
     }
     nodeAgent = agent;
-    router = agent->getCoreModule()->getObject<http::MarsHttp>(HTTP_MODULE_NAME)->getRouter();
     prometheanConfig = std::make_shared<MarsPrometheanConfig>();
     try {
         //加载配置
@@ -89,11 +89,11 @@ void promethean::MarsPromethean::finishFunction() {
 
 
 
-int promethean::MarsPromethean::loadUnixServer() {
+bool promethean::MarsPromethean::loadUnixServer() {
     //检查路径是否是空的
     if (prometheanConfig->unix_path.empty()) {
         std::cerr << "promethean unix path empty" << std::endl;
-        exit(-1);
+        return false;
     }
     int ret;
     //检查文件是否存在
@@ -103,7 +103,7 @@ int promethean::MarsPromethean::loadUnixServer() {
         if (ret < 0) {
             std::cout << "unlink err!" << prometheanConfig->unix_path.c_str()
                       << ";error msg:" << strerror(errno) << std::endl;
-            exit(-1);
+            return false;
         }
     }
     int socket = ::socket(AF_UNIX, SOCK_DGRAM, 0);

@@ -11,16 +11,11 @@ bool MarsJson::jsonDecode(const std::string& strJsonMess,Json::Value* root) {
     JSONCPP_STRING errs;
     Json::Value parseValue;
     bool res = jsonReader->parse(strJsonMess.c_str(),strJsonMess.c_str()+strJsonMess.length(),root,&errs);
-    if (!res || !errs.empty()) {
-        return false;
-    }else{
-        //转化为map
-        return true;
-    }
+    return !(!res || !errs.empty());
 }
 
 //压缩数据
-String MarsJson::jsonEncode(Value proto_value){
+String MarsJson::jsonEncode(const Value& proto_value){
     StreamWriterBuilder proto_writer;
     //默认不格式化
     proto_writer.settings_["indentation"] = "";

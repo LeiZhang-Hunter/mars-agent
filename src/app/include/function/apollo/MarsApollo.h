@@ -9,6 +9,7 @@
 
 #include "MarsFunctionObject.h"
 #include "MarsApolloConfig.h"
+#include "MarsApolloClient.h"
 
 namespace app {
     class NodeAgent;
@@ -19,20 +20,15 @@ namespace function {
         public:
             MarsApollo(const std::shared_ptr<app::NodeAgent> &agent);
 
-            void initFunction() {
+            void initFunction();
 
-            }
+            void finishFunction();
 
-            void finishFunction() {
-
-            }
-
-            void shutdownFunction() {
-
-            }
+            void shutdownFunction();
 
         private:
             std::shared_ptr<MarsApolloConfig> apolloConfig;
+            std::shared_ptr<MarsApolloClient> apolloClient;
         };
     }
 }

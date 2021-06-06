@@ -76,8 +76,10 @@ void apollo::MarsApolloConfig::load(const YAML::Node& node) {
                 if (appNamespace.empty()) {
                     continue;
                 }
-
-                config.localNamespaces.push_back(std::move(appNamespace));
+                std::pair<std::string, int> appPair;
+                appPair.first = appNamespace;
+                appPair.second = -1;
+                config.localNamespaces.push_back(std::move(appPair));
             }
         }
         appVector.push_back(std::move(config));

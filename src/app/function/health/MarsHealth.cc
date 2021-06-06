@@ -14,11 +14,11 @@
 
 using namespace function::health;
 
-MarsHealth::MarsHealth(const std::shared_ptr<app::NodeAgent> &agent) {
+MarsHealth::MarsHealth(const std::shared_ptr<app::NodeAgent> &agent)
+:router(agent->getCoreModule()->getObject<http::MarsHttp>(HTTP_MODULE_NAME)->getRouter()) {
     if (!agent) {
         return;
     }
-    router = agent->getCoreModule()->getObject<http::MarsHttp>(HTTP_MODULE_NAME)->getRouter();
     //加载配置
     std::shared_ptr<config::MarsConfig>& marsConfig = agent->getMarsConfig();
     loadConfig(marsConfig->getYamlCore());

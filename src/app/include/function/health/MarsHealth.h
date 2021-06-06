@@ -43,7 +43,7 @@ namespace function {
             //加载配置
             bool loadConfig(const YAML::Node& yamlConfig);
             //路由
-            std::shared_ptr<http::MarsHttpRouter> router;
+            const std::shared_ptr<http::MarsHttpRouter>& router;
             //配置文件
             std::map<std::string, std::shared_ptr<MarsHealthConfig>> healthConfig;
 

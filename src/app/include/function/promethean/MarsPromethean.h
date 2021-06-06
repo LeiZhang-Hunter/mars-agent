@@ -54,12 +54,12 @@ namespace function {
             ~MarsPromethean();
 
         private:
-            int loadUnixServer();
+            bool loadUnixServer();
 
 
 
             //路由
-            std::shared_ptr<http::MarsHttpRouter> router;
+            const std::shared_ptr<http::MarsHttpRouter>& router;
 
             //普罗米修斯的配置
             std::shared_ptr<MarsPrometheanConfig> prometheanConfig;
