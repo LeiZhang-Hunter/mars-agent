@@ -23,6 +23,7 @@ void apollo::MarsApolloConfig::load(const YAML::Node& node) {
 
     try {
         port = node["port"].as<uint16_t>();
+        stringPort = node["port"].as<std::string>();
     } catch (std::exception& err) {
         std::cerr << err.what() << std::endl;
     }
@@ -34,6 +35,9 @@ void apollo::MarsApolloConfig::load(const YAML::Node& node) {
         std::cerr << err.what() << std::endl;
         return;
     }
+
+    host = (server + ":");
+    host += stringPort;
 
     for(unsigned i=0; i < app.size(); i++) {
         apolloAppConfig config;
@@ -57,18 +61,11 @@ void apollo::MarsApolloConfig::load(const YAML::Node& node) {
             std::cerr << err.what() << std::endl;
         }
 
-        YAML::Node namespaces;
-        try {
-            namespaces = node["localNamespaces"];
-        } catch (std::exception& err) {
-            std::cerr << err.what() << std::endl;
-        }
-
-        if (namespaces.size() > 0) {
+        if (app[i]["localNamespaces"] && app[i]["localNamespaces"].size() > 0) {
             for(unsigned index = 0; index < app.size(); index++) {
                 std::string appNamespace;
                 try {
-                    appNamespace = namespaces[index].as<std::string>();
+                    appNamespace = app[i]["localNamespaces"][index].as<std::string>();
                 } catch (std::exception& err) {
                     std::cerr << err.what() << std::endl;
                 }

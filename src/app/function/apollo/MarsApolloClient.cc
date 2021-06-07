@@ -4,7 +4,10 @@
 extern "C" {
 #include "evhttp.h"
 }
+
+#include <iostream>
 #include "common/MarsJson.h"
+#include "common/MarsStringTool.h"
 #include "apollo/MarsApolloClient.h"
 
 using namespace function;
@@ -33,20 +36,33 @@ std::vector<std::pair<std::string, int>>& apollo::MarsApolloClient::initLocalNam
 
         ;
         notificationsUrl += "?appId=";
-        notificationsUrl += appList[i].appId;
+        notificationsUrl += common::MarsStringTool::UrlEncode(appList[i].appId);
         notificationsUrl += "&cluster=";
-        notificationsUrl += appList[i].cluster;
+        notificationsUrl += common::MarsStringTool::UrlEncode(appList[i].cluster);
         notificationsUrl += "&notifications=";
-        notificationsUrl += common::MarsJson::jsonEncode(namespaces);
+        notificationsUrl += common::MarsStringTool::UrlEncode(common::MarsJson::jsonEncode(namespaces));
+
+        std::cout << config->getHost() << std::endl;
         struct evkeyvalq *head = evhttp_request_get_output_headers(req);
-        evhttp_add_header(head, "Host", config->getServer().c_str());
+        evhttp_add_header(head, "Host", config->getHost().c_str());
+        evhttp_add_header(head, "Connection", "keep-alive");
         evhttp_make_request(conn, req, EVHTTP_REQ_GET, notificationsUrl.c_str());
+        struct timeval tv;
+        tv.tv_sec = 3;
+        tv.tv_usec = 0;
+        evhttp_connection_set_timeout_tv(conn, &tv);
     }
 
 }
 
 void apollo::MarsApolloClient::onNotifications(struct evhttp_request *req, void *arg) {
+    //超时断开连接了
+    if (!req) {
+        return;
+    }
     int code = evhttp_request_get_response_code(req);
+    auto client = static_cast<MarsApolloClient*>(arg);
+    std::cout << code << std::endl;
     return;
 }
 

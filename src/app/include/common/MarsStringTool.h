@@ -9,6 +9,7 @@
 #include <cstring>
 #include <string>
 #include <algorithm>
+#include <cassert>
 
 namespace common {
     class MarsStringTool {
@@ -40,26 +41,27 @@ namespace common {
             std::transform(str.begin(), str.end(), str.begin(), ::toupper);
         }
 
-        //把字符串切割成数组
-        static std::vector<std::string> split(const std::string& str, const std::string& delim) {
-            std::vector<std::string> res;
-            if("" == str) return res;
-            //先将要切割的字符串从string类型转换为char*类型
-            char * strs = new char[str.length() + 1] ; //不要忘了
-            strcpy(strs, str.c_str());
-
-            char * d = new char[delim.length() + 1];
-            strcpy(d, delim.c_str());
-
-            char *p = strtok(strs, d);
-            while(p) {
-                std::string s = p; //分割得到的字符串转换为string类型
-                res.push_back(s); //存入结果数组
-                p = strtok(NULL, d);
-            }
-
-            return res;
+        static unsigned char ToHex(unsigned char x)
+        {
+            return  x > 9 ? x + 55 : x + 48;
         }
+
+        static unsigned char FromHex(unsigned char x)
+        {
+            unsigned char y;
+            if (x >= 'A' && x <= 'Z') y = x - 'A' + 10;
+            else if (x >= 'a' && x <= 'z') y = x - 'a' + 10;
+            else if (x >= '0' && x <= '9') y = x - '0';
+            else assert(0);
+            return y;
+        }
+
+        static std::string UrlEncode(const std::string& str);
+
+        static std::string UrlDecode(const std::string& str);
+
+        //把字符串切割成数组
+        static std::vector<std::string> split(const std::string& str, const std::string& delim);
     };
 }
 

@@ -46,6 +46,14 @@ namespace function {
                 return port;
             }
 
+            std::string& getStringPort() {
+                return stringPort;
+            }
+
+            std::string getHost() {
+                return host;
+            }
+
 
             /**
              * 加载配置
@@ -57,8 +65,10 @@ namespace function {
             std::string api;
             std::string server;
             uint16_t port;
+            std::string stringPort;
             std::string notificationsUrl =  "/notifications/v2";
             std::vector<apolloAppConfig> appVector;
+            std::string host;
         };
     }
 }
