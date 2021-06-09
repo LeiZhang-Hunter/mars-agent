@@ -6,8 +6,10 @@ extern "C" {
 }
 
 #include <iostream>
+
 #include "common/MarsJson.h"
 #include "common/MarsStringTool.h"
+#include "http/MarsHttpResponse.h"
 #include "apollo/MarsApolloClient.h"
 
 using namespace function;
@@ -43,6 +45,9 @@ std::vector<std::pair<std::string, int>>& apollo::MarsApolloClient::initLocalNam
         notificationsUrl += common::MarsStringTool::UrlEncode(common::MarsJson::jsonEncode(namespaces));
 
         std::cout << config->getHost() << std::endl;
+        auto tmpResponse =  std::make_shared<http::MarsHealthHttpResponse>();
+        tmpResponse->response = response;
+        tmpResponse->connection = conn;
         struct evkeyvalq *head = evhttp_request_get_output_headers(req);
         evhttp_add_header(head, "Host", config->getHost().c_str());
         evhttp_add_header(head, "Connection", "keep-alive");
@@ -63,6 +68,7 @@ void apollo::MarsApolloClient::onNotifications(struct evhttp_request *req, void 
     int code = evhttp_request_get_response_code(req);
     auto client = static_cast<MarsApolloClient*>(arg);
     std::cout << code << std::endl;
+    evhttp_connection_free(req->evcon);
     return;
 }
 
